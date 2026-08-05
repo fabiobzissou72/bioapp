@@ -57,7 +57,7 @@ export function PixButton({
       <button
         onClick={() => setOpen(true)}
         style={style}
-        className="w-full rounded-full px-5 py-3 font-medium text-white shadow transition active:scale-[0.98]"
+        className="w-full rounded-full px-5 py-3 font-medium shadow transition active:scale-[0.98]"
       >
         {button.label || "Pagar com Pix"}
       </button>
@@ -106,7 +106,7 @@ export function PixButton({
                   onClick={handleGenerate}
                   disabled={!amount}
                   style={style}
-                  className="mt-2 w-full rounded-full px-5 py-3 font-medium text-white shadow disabled:opacity-40"
+                  className="mt-2 w-full rounded-full px-5 py-3 font-medium shadow disabled:opacity-40"
                 >
                   Gerar Pix
                 </button>

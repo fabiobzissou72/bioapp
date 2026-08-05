@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getContrastTextColor } from "@/lib/color";
 import type { CatalogGroup, CatalogItem } from "@/lib/types";
 
 const ASPECT_CLASS: Record<CatalogItem["aspect"], string> = {
@@ -31,8 +32,8 @@ function ItemCard({ item, primaryColor }: { item: CatalogItem; primaryColor: str
             href={item.cta_url}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ backgroundColor: primaryColor }}
-            className="mt-3 inline-block rounded-full px-4 py-2 text-sm font-medium text-white"
+            style={{ backgroundColor: primaryColor, color: getContrastTextColor(primaryColor) }}
+            className="mt-3 inline-block rounded-full px-4 py-2 text-sm font-medium"
           >
             {item.cta_label}
           </a>

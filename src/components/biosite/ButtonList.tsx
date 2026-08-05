@@ -1,6 +1,7 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
+import { getContrastTextColor } from "@/lib/color";
 import type { BiositeButton } from "@/lib/types";
 import { PixButton } from "./PixButton";
 import { WifiButton } from "./WifiButton";
@@ -70,8 +71,10 @@ export function ButtonList({
   return (
     <div className="flex w-full flex-col gap-3">
       {buttons.map((button) => {
+        const backgroundColor = button.color || primaryColor;
         const style: React.CSSProperties = {
-          backgroundColor: button.color || primaryColor,
+          backgroundColor,
+          color: getContrastTextColor(backgroundColor),
           animation: button.pulse ? "pulse 2s infinite" : undefined,
         };
 
@@ -96,7 +99,7 @@ export function ButtonList({
             rel={isInternal ? undefined : "noopener noreferrer"}
             onClick={() => trackClick(button.id)}
             style={style}
-            className="flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-center font-medium text-white shadow transition active:scale-[0.98]"
+            className="flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-center font-medium shadow transition active:scale-[0.98]"
           >
             {button.style !== "icon" && <span>{icon}</span>}
             <span>{label}</span>

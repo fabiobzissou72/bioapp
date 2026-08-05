@@ -19,7 +19,7 @@ export function WifiButton({ button, style }: { button: BiositeButton; style: Re
       <button
         onClick={() => setOpen(true)}
         style={style}
-        className="flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 font-medium text-white shadow transition active:scale-[0.98]"
+        className="flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 font-medium shadow transition active:scale-[0.98]"
       >
         📶 {button.label || "WiFi"}
       </button>
