@@ -110,13 +110,13 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Nome do negócio"
-        className="rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none"
+        className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none"
       />
       <textarea
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         placeholder="Descrição curta"
-        className="rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none"
+        className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none"
       />
 
       <div className="flex items-center gap-3">

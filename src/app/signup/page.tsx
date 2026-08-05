@@ -71,7 +71,7 @@ export default function SignupPage() {
           value={agencyName}
           onChange={(e) => setAgencyName(e.target.value)}
           placeholder="Nome da sua agência"
-          className="rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-neutral-400"
+          className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none focus:border-neutral-400"
         />
         <input
           type="email"
@@ -79,7 +79,7 @@ export default function SignupPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="E-mail"
-          className="rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-neutral-400"
+          className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none focus:border-neutral-400"
         />
         <input
           type="password"
@@ -88,7 +88,7 @@ export default function SignupPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Senha"
-          className="rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-neutral-400"
+          className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none focus:border-neutral-400"
         />
         {error && <p className="text-sm text-red-500">{error}</p>}
         <button

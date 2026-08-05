@@ -27,7 +27,10 @@
       "Bash(curl -s -o /dev/null -w \"login page status: %{http_code}\\\\n\" https://bioapp-black.vercel.app/login)",
       "Bash(curl -s -o /dev/null -w \"bioapp.vercel.app -> %{http_code}\\\\n\" https://bioapp.vercel.app/)",
       "Bash(curl -s -o /dev/null -w \"minhabio.vercel.app -> %{http_code}\\\\n\" https://minhabio.vercel.app/)",
-      "Bash(curl -s https://minhabio.vercel.app/)"
+      "Bash(curl -s https://minhabio.vercel.app/)",
+      "Bash(curl -s https://minhabioapp.vercel.app/login)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" https://minhabioapp.vercel.app/)",
+      "Bash(curl -s -o /dev/null -w \"minhabioapp.vercel.app -> %{http_code}\\\\n\" https://minhabioapp.vercel.app/login)"
     ]
   }
 }

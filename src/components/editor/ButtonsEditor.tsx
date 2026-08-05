@@ -80,11 +80,15 @@ export function ButtonsEditor({
       {buttons.map((b, i) => (
         <div
           key={b.id}
-          className="flex items-center gap-2 rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+          className="flex items-center gap-2 rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
         >
           <span className="flex-1">
-            <span className="font-medium">{TYPE_LABELS[b.type]}</span>
-            {b.label ? ` · ${b.label}` : ""}
+            <span className="font-medium">{b.label || TYPE_LABELS[b.type]}</span>
+            {b.label && b.label !== TYPE_LABELS[b.type] ? (
+              <span className="text-neutral-400"> · {TYPE_LABELS[b.type]}</span>
+            ) : (
+              ""
+            )}
           </span>
           <button onClick={() => move(b.id, -1)} disabled={i === 0} className="text-neutral-400 disabled:opacity-20">
             ↑
@@ -110,11 +114,11 @@ export function ButtonsEditor({
           + Adicionar botão
         </button>
       ) : (
-        <div className="mt-1 flex flex-col gap-2 rounded-lg border border-neutral-200 p-3">
+        <div className="mt-1 flex flex-col gap-2 rounded-lg border border-neutral-200 bg-white text-neutral-900 p-3">
           <select
             value={draft.type}
             onChange={(e) => setDraft((d) => ({ ...d, type: e.target.value as ButtonType, config: {} }))}
-            className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+            className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
           >
             {Object.entries(TYPE_LABELS).map(([value, label]) => (
               <option key={value} value={value}>
@@ -127,7 +131,7 @@ export function ButtonsEditor({
             value={draft.label || ""}
             onChange={(e) => setDraft((d) => ({ ...d, label: e.target.value }))}
             placeholder="Rótulo (opcional)"
-            className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+            className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
           />
 
           {(draft.type === "instagram" || draft.type === "google_review" || draft.type === "custom") && (
@@ -135,7 +139,7 @@ export function ButtonsEditor({
               value={draft.url || ""}
               onChange={(e) => setDraft((d) => ({ ...d, url: e.target.value }))}
               placeholder="URL"
-              className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+              className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
             />
           )}
 
@@ -145,13 +149,13 @@ export function ButtonsEditor({
                 value={draft.url || ""}
                 onChange={(e) => setDraft((d) => ({ ...d, url: e.target.value }))}
                 placeholder="Telefone (com DDD e país, ex: 5511999999999)"
-                className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+                className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
               />
               <input
                 value={draft.config?.message || ""}
                 onChange={(e) => updateConfig({ message: e.target.value })}
                 placeholder="Mensagem inicial (opcional)"
-                className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+                className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
               />
             </>
           )}
@@ -162,13 +166,13 @@ export function ButtonsEditor({
                 value={draft.config?.pix_key || ""}
                 onChange={(e) => updateConfig({ pix_key: e.target.value })}
                 placeholder="Chave Pix"
-                className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+                className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
               />
               <input
                 value={draft.config?.pix_merchant_city || ""}
                 onChange={(e) => updateConfig({ pix_merchant_city: e.target.value })}
                 placeholder="Cidade do recebedor"
-                className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+                className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
               />
             </>
           )}
@@ -179,13 +183,13 @@ export function ButtonsEditor({
                 value={draft.config?.wifi_ssid || ""}
                 onChange={(e) => updateConfig({ wifi_ssid: e.target.value })}
                 placeholder="Nome da rede"
-                className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+                className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
               />
               <input
                 value={draft.config?.wifi_password || ""}
                 onChange={(e) => updateConfig({ wifi_password: e.target.value })}
                 placeholder="Senha"
-                className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+                className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
               />
             </>
           )}
@@ -195,7 +199,7 @@ export function ButtonsEditor({
               value={draft.config?.full_address || ""}
               onChange={(e) => updateConfig({ full_address: e.target.value })}
               placeholder="Endereço completo"
-              className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+              className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
             />
           )}
 

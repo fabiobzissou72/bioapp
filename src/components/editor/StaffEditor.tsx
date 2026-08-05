@@ -61,7 +61,7 @@ function StaffRow({
   }
 
   return (
-    <div className="flex flex-col gap-3 rounded-lg border border-neutral-200 p-3">
+    <div className="flex flex-col gap-3 rounded-lg border border-neutral-200 bg-white text-neutral-900 p-3">
       <div className="flex items-center justify-between">
         <span className="font-medium text-neutral-900">{member.name}</span>
         <button onClick={removeStaff} className="text-sm text-red-500">
@@ -101,7 +101,7 @@ function StaffRow({
         <select
           value={weekday}
           onChange={(e) => setWeekday(e.target.value)}
-          className="rounded-lg border border-neutral-200 px-2 py-1 text-xs"
+          className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-2 py-1 text-xs"
         >
           {WEEKDAYS.map((d, i) => (
             <option key={i} value={i}>
@@ -113,14 +113,14 @@ function StaffRow({
           type="time"
           value={start}
           onChange={(e) => setStart(e.target.value)}
-          className="rounded-lg border border-neutral-200 px-2 py-1 text-xs"
+          className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-2 py-1 text-xs"
         />
         <span className="text-xs text-neutral-400">até</span>
         <input
           type="time"
           value={end}
           onChange={(e) => setEnd(e.target.value)}
-          className="rounded-lg border border-neutral-200 px-2 py-1 text-xs"
+          className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-2 py-1 text-xs"
         />
         <button
           onClick={addAvailability}
@@ -174,12 +174,12 @@ export function StaffEditor({
         />
       ))}
 
-      <div className="flex gap-2 rounded-lg border border-neutral-200 p-3">
+      <div className="flex gap-2 rounded-lg border border-neutral-200 bg-white text-neutral-900 p-3">
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Nome do profissional"
-          className="flex-1 rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+          className="flex-1 rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
         />
         <button
           onClick={addStaff}

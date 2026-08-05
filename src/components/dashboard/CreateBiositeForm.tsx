@@ -64,7 +64,7 @@ export function CreateBiositeForm({ disabled }: { disabled: boolean }) {
         value={name}
         onChange={(e) => handleNameChange(e.target.value)}
         placeholder="Nome do negócio"
-        className="rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none focus:border-neutral-400"
+        className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none focus:border-neutral-400"
       />
       <div className="flex items-center gap-1 text-sm text-neutral-500">
         <span>bioapp.vercel.app/</span>
@@ -75,7 +75,7 @@ export function CreateBiositeForm({ disabled }: { disabled: boolean }) {
             setSlugTouched(true);
             setSlug(slugify(e.target.value));
           }}
-          className="flex-1 rounded-lg border border-neutral-200 px-2 py-1 text-sm outline-none focus:border-neutral-400"
+          className="flex-1 rounded-lg border border-neutral-200 bg-white text-neutral-900 px-2 py-1 text-sm outline-none focus:border-neutral-400"
         />
       </div>
       {error && <p className="text-sm text-red-500">{error}</p>}

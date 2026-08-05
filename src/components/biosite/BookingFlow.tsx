@@ -249,19 +249,19 @@ export function BookingFlow({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Seu nome"
-            className="rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none"
+            className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none"
           />
           <input
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="Seu telefone"
-            className="rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none"
+            className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none"
           />
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Observações (opcional)"
-            className="rounded-lg border border-neutral-200 px-3 py-2 text-sm outline-none"
+            className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none"
           />
           {error && <p className="text-sm text-red-500">{error}</p>}
           <button
