@@ -61,15 +61,20 @@ export function CatalogGroupCard({
   async function addItem(file: File) {
     setUploading(true);
     const mediaType = file.type.startsWith("video") ? "video" : "image";
-    const url = await uploadMedia(file, ownerId, "catalog");
-    await supabase.from("catalog_items").insert({
-      group_id: group.id,
-      media_type: mediaType,
-      media_url: url,
-      position: items.length,
-    });
-    setUploading(false);
-    router.refresh();
+    try {
+      const url = await uploadMedia(file, ownerId, "catalog");
+      await supabase.from("catalog_items").insert({
+        group_id: group.id,
+        media_type: mediaType,
+        media_url: url,
+        position: items.length,
+      });
+      router.refresh();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Erro ao enviar o arquivo.");
+    } finally {
+      setUploading(false);
+    }
   }
 
   async function moveItem(item: CatalogItem, direction: -1 | 1) {

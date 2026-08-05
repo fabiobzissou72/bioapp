@@ -31,11 +31,16 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading("logo");
-    const url = await uploadMedia(file, biosite.owner_id, "logo");
-    setLogoUrl(url);
-    await supabase.from("biosites").update({ logo_url: url }).eq("id", biosite.id);
-    setUploading(null);
-    router.refresh();
+    try {
+      const url = await uploadMedia(file, biosite.owner_id, "logo");
+      setLogoUrl(url);
+      await supabase.from("biosites").update({ logo_url: url }).eq("id", biosite.id);
+      router.refresh();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Erro ao enviar o arquivo.");
+    } finally {
+      setUploading(null);
+    }
   }
 
   async function handleCoverChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -43,12 +48,17 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
     if (!file) return;
     setUploading("cover");
     const type = file.type.startsWith("video") ? "video" : "image";
-    const url = await uploadMedia(file, biosite.owner_id, "cover");
-    setCoverUrl(url);
-    setCoverType(type);
-    await supabase.from("biosites").update({ cover_url: url, cover_type: type }).eq("id", biosite.id);
-    setUploading(null);
-    router.refresh();
+    try {
+      const url = await uploadMedia(file, biosite.owner_id, "cover");
+      setCoverUrl(url);
+      setCoverType(type);
+      await supabase.from("biosites").update({ cover_url: url, cover_type: type }).eq("id", biosite.id);
+      router.refresh();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Erro ao enviar o arquivo.");
+    } finally {
+      setUploading(null);
+    }
   }
 
   async function handleSave() {

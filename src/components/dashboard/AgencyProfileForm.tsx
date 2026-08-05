@@ -30,9 +30,14 @@ export function AgencyProfileForm({
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
-    const url = await uploadMedia(file, userId, "agency-logo");
-    setLogoUrl(url);
-    setUploading(false);
+    try {
+      const url = await uploadMedia(file, userId, "agency-logo");
+      setLogoUrl(url);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Erro ao enviar o arquivo.");
+    } finally {
+      setUploading(false);
+    }
   }
 
   async function handleSave() {

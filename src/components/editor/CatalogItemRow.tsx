@@ -34,10 +34,15 @@ export function CatalogItemRow({
     if (!file) return;
     setUploading(true);
     const mediaType = file.type.startsWith("video") ? "video" : "image";
-    const url = await uploadMedia(file, ownerId, "catalog");
-    await supabase.from("catalog_items").update({ media_url: url, media_type: mediaType }).eq("id", item.id);
-    setUploading(false);
-    router.refresh();
+    try {
+      const url = await uploadMedia(file, ownerId, "catalog");
+      await supabase.from("catalog_items").update({ media_url: url, media_type: mediaType }).eq("id", item.id);
+      router.refresh();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Erro ao enviar o arquivo.");
+    } finally {
+      setUploading(false);
+    }
   }
 
   async function save() {
