@@ -21,7 +21,10 @@
       "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_flow.py\")",
       "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_booking_click.py\")",
       "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_booking_monday.py\")",
-      "Bash(powershell -Command 'Get-Process -Name node -ErrorAction SilentlyContinue | Where-Object {$_.Path -like '\\\\''*Bio Insta*'\\\\'' -or $_.CommandLine -like '\\\\''*bioapp*'\\\\''} | Select-Object Id, ProcessName')"
+      "Bash(powershell -Command 'Get-Process -Name node -ErrorAction SilentlyContinue | Where-Object {$_.Path -like '\\\\''*Bio Insta*'\\\\'' -or $_.CommandLine -like '\\\\''*bioapp*'\\\\''} | Select-Object Id, ProcessName')",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} -> %{redirect_url}\\\\n\" https://bioapp-black.vercel.app/)",
+      "Bash(curl -s https://bioapp-black.vercel.app/login)",
+      "Bash(curl -s -o /dev/null -w \"login page status: %{http_code}\\\\n\" https://bioapp-black.vercel.app/login)"
     ]
   }
 }
