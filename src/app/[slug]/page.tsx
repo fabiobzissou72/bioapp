@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { ButtonList } from "@/components/biosite/ButtonList";
 import { CatalogSection } from "@/components/biosite/CatalogSection";
+import { MyBookings } from "@/components/biosite/MyBookings";
 import type { BiositeButton, CatalogGroup, CatalogItem } from "@/lib/types";
 
 export const revalidate = 0;
@@ -130,6 +131,8 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
           </p>
         )}
       </div>
+
+      <MyBookings biositeId={biosite.id} />
 
       <ButtonList
         biositeId={biosite.id}
