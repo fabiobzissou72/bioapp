@@ -61,7 +61,8 @@
       "Bash(curl -s \"https://webhook.site/token\" -X POST -H \"Content-Type: application/json\" -d '{}')",
       "Bash(curl -s -X POST https://minhabioapp.vercel.app/api/bookings -H 'Content-Type: application/json' -d '{ *)",
       "Bash(curl -s \"https://webhook.site/token/311656e0-09c9-4ad3-97d9-61e765fbae4d/requests\")",
-      "Bash(time curl -s -X POST https://minhabioapp.vercel.app/api/bookings -H 'Content-Type: application/json' -d '{ *)"
+      "Bash(time curl -s -X POST https://minhabioapp.vercel.app/api/bookings -H 'Content-Type: application/json' -d '{ *)",
+      "Bash(time curl -s -X POST https://minhabioapp.vercel.app/api/my-bookings -H 'Content-Type: application/json' -d '{ *)"
     ],
     "additionalDirectories": [
       "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app\\painel\\(dashboard)",

@@ -5,15 +5,21 @@ export async function notifyWebhook(
   event: "booking.created" | "booking.cancelled",
   payload: Record<string, unknown>
 ) {
-  if (!webhookUrl) return;
+  if (!webhookUrl) {
+    console.log(`[notifyWebhook] skipped ${event}: no webhook_url configured`);
+    return;
+  }
   try {
-    await fetch(webhookUrl, {
+    const res = await fetch(webhookUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ event, ...payload }),
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(8000),
     });
-  } catch {
-    // Best-effort only — a broken webhook must never break booking/cancellation.
+    console.log(`[notifyWebhook] ${event} -> ${webhookUrl} responded ${res.status}`);
+  } catch (err) {
+    // Best-effort only — a broken webhook must never break booking/cancellation —
+    // but log it so failures are actually visible instead of silent.
+    console.error(`[notifyWebhook] ${event} -> ${webhookUrl} failed:`, err);
   }
 }
