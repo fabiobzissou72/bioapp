@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(gh repo view fabiobzissou72/bioapp 2>&1)",
+      "Bash(where gh *)",
+      "Bash(where git *)",
+      "Bash(npx --yes create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack)",
+      "Bash(rm -rf bioapp-scaffold)",
+      "Bash(npx --yes create-next-app@latest bioapp-scaffold --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack)",
+      "Bash(where psql *)",
+      "Bash(psql --version)",
+      "Bash(cd \"/c/Users/fbzis/Desktop/Bio Insta\")",
+      "Bash(export DATABASE_URL=\"postgresql://postgres:Fbz12061972%40%40%40%23@db.psdllonqhxotobknnhog.supabase.co:5432/postgres\")",
+      "Bash(nslookup db.psdllonqhxotobknnhog.supabase.co)",
+      "Bash(nslookup psdllonqhxotobknnhog.supabase.co)",
+      "Bash(export DATABASE_URL=\"postgresql://postgres.psdllonqhxotobknnhog:Fbz12061972%40%40%40%23@aws-0-sa-east-1.pooler.supabase.com:6543/postgres\")",
+      "Bash(npx tsx -e ' *)",
+      "Bash(DATABASE_URL=postgresql://postgres.psdllonqhxotobknnhog:Fbz12061972%40%40%40%23@aws-0-sa-east-1.pooler.supabase.com:6543/postgres node -e ' *)",
+      "Bash(npx eslint *)",
+      "Bash(python scripts/with_server.py --help)",
+      "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_flow.py\")",
+      "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_booking_click.py\")",
+      "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_booking_monday.py\")",
+      "Bash(powershell -Command 'Get-Process -Name node -ErrorAction SilentlyContinue | Where-Object {$_.Path -like '\\\\''*Bio Insta*'\\\\'' -or $_.CommandLine -like '\\\\''*bioapp*'\\\\''} | Select-Object Id, ProcessName')"
+    ]
+  }
+}
