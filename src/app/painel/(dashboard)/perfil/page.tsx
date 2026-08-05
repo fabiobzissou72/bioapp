@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { AgencyProfileForm } from "@/components/dashboard/AgencyProfileForm";
 
@@ -20,11 +19,7 @@ export default async function PerfilPage() {
 
   return (
     <main className="mx-auto min-h-screen w-full max-w-lg px-4 pb-16 pt-6">
-      <Link href="/painel" className="text-sm text-neutral-500 hover:text-neutral-800">
-        ← Voltar
-      </Link>
-
-      <h1 className="mt-4 mb-1 text-xl font-bold text-neutral-900">Meu perfil</h1>
+      <h1 className="mb-1 text-xl font-bold text-neutral-900">Meu perfil</h1>
       <p className="mb-6 text-sm text-neutral-500">
         Essas informações aparecem no rodapé de todos os biosites que você criar (&quot;feito por...&quot;).
       </p>

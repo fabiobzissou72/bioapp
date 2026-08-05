@@ -15,6 +15,8 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
   const [color, setColor] = useState(biosite.primary_color);
   const [buttonTextColor, setButtonTextColor] = useState(biosite.button_text_color);
   const [logoShape, setLogoShape] = useState(biosite.logo_shape);
+  const [logoTransparent, setLogoTransparent] = useState(biosite.logo_transparent);
+  const [theme, setTheme] = useState(biosite.theme);
   const [published, setPublished] = useState(biosite.published);
   const [logoUrl, setLogoUrl] = useState(biosite.logo_url);
   const [coverUrl, setCoverUrl] = useState(biosite.cover_url);
@@ -59,6 +61,8 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
         primary_color: color,
         button_text_color: buttonTextColor || null,
         logo_shape: logoShape,
+        logo_transparent: logoTransparent,
+        theme,
         published,
         updated_at: new Date().toISOString(),
       })
@@ -135,6 +139,14 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
         >
           Redonda
         </button>
+        <label className="ml-2 flex items-center gap-1.5 text-xs text-neutral-500">
+          <input
+            type="checkbox"
+            checked={logoTransparent}
+            onChange={(e) => setLogoTransparent(e.target.checked)}
+          />
+          Logo sem fundo (PNG transparente)
+        </label>
       </div>
 
       <input
@@ -149,6 +161,30 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
         placeholder="Descrição curta"
         className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none"
       />
+
+      <div className="flex items-center gap-2 text-sm">
+        <span className="text-neutral-600">Tema</span>
+        <button
+          onClick={() => setTheme("light")}
+          className="rounded-full border px-3 py-1 text-xs"
+          style={{
+            borderColor: theme === "light" ? color : "#e5e5e5",
+            backgroundColor: theme === "light" ? `${color}14` : "white",
+          }}
+        >
+          Claro
+        </button>
+        <button
+          onClick={() => setTheme("dark")}
+          className="rounded-full border px-3 py-1 text-xs"
+          style={{
+            borderColor: theme === "dark" ? color : "#e5e5e5",
+            backgroundColor: theme === "dark" ? `${color}14` : "white",
+          }}
+        >
+          Escuro
+        </button>
+      </div>
 
       <div className="flex items-center gap-3">
         <label className="text-sm text-neutral-600">Cor principal</label>

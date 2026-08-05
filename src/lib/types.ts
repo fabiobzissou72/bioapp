@@ -32,10 +32,12 @@ export type Biosite = {
   template: string;
   logo_url: string | null;
   logo_shape: "round" | "square";
+  logo_transparent: boolean;
   cover_type: "image" | "video" | null;
   cover_url: string | null;
   primary_color: string;
   button_text_color: string | null;
+  theme: "light" | "dark";
   published: boolean;
   created_at: string;
   updated_at: string;

@@ -47,10 +47,12 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
     (itemsByGroup[item.group_id] ||= []).push(item);
   }
 
+  const dark = biosite.theme === "dark";
+
   return (
     <main
       className="mx-auto flex min-h-screen w-full max-w-md flex-col items-center gap-5 px-4 pb-10 pt-6"
-      style={{ backgroundColor: "#faf9f9" }}
+      style={{ backgroundColor: dark ? "#0f0f10" : "#faf9f9" }}
     >
       {biosite.cover_url && (
         <div className="-mx-4 -mt-6 mb-2 h-40 w-[calc(100%+2rem)] overflow-hidden bg-neutral-200">
@@ -75,15 +77,23 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
         <img
           src={biosite.logo_url}
           alt={biosite.business_name}
-          className={`h-24 w-24 border-4 border-white object-cover shadow-lg ${
-            biosite.logo_shape === "round" ? "rounded-full" : "rounded-2xl"
-          } ${biosite.cover_url ? "-mt-16" : ""}`}
+          className={`h-24 w-24 object-cover ${
+            biosite.logo_transparent ? "" : "border-4 border-white shadow-lg"
+          } ${biosite.logo_shape === "round" ? "rounded-full" : "rounded-2xl"} ${
+            biosite.cover_url ? "-mt-16" : ""
+          }`}
         />
       )}
 
       <div className="text-center">
-        <h1 className="text-xl font-bold text-neutral-900">{biosite.business_name}</h1>
-        {biosite.description && <p className="mt-1 text-sm text-neutral-500">{biosite.description}</p>}
+        <h1 className={`text-xl font-bold ${dark ? "text-neutral-50" : "text-neutral-900"}`}>
+          {biosite.business_name}
+        </h1>
+        {biosite.description && (
+          <p className={`mt-1 text-sm ${dark ? "text-neutral-400" : "text-neutral-500"}`}>
+            {biosite.description}
+          </p>
+        )}
       </div>
 
       <ButtonList
@@ -99,6 +109,7 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
         groups={(groups || []) as CatalogGroup[]}
         itemsByGroup={itemsByGroup}
         primaryColor={biosite.primary_color}
+        dark={dark}
       />
 
       {profile?.agency_name && (
@@ -106,7 +117,9 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
           href={profile.agency_link || "#"}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-6 flex items-center gap-2 text-xs text-neutral-400 hover:text-neutral-600"
+          className={`mt-6 flex items-center gap-2 text-xs ${
+            dark ? "text-neutral-500 hover:text-neutral-300" : "text-neutral-400 hover:text-neutral-600"
+          }`}
         >
           {profile.agency_logo_url && (
             // eslint-disable-next-line @next/next/no-img-element

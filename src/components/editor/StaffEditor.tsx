@@ -7,7 +7,12 @@ import { AvailabilityOverridesEditor } from "./AvailabilityOverridesEditor";
 import type { Service, Staff } from "@/lib/types";
 
 type Availability = { id: string; staff_id: string; weekday: number; start_time: string; end_time: string };
-type StaffService = { staff_id: string; service_id: string };
+type StaffService = {
+  staff_id: string;
+  service_id: string;
+  price_override: number | null;
+  duration_override: number | null;
+};
 type Override = { id: string; staff_id: string; date: string; blocked_hours: number[]; full_day_blocked: boolean };
 
 const WEEKDAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
@@ -15,13 +20,13 @@ const WEEKDAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "
 function StaffRow({
   member,
   services,
-  assignedServiceIds,
+  staffServices,
   availability,
   overrides,
 }: {
   member: Staff;
   services: Service[];
-  assignedServiceIds: Set<string>;
+  staffServices: StaffService[];
   availability: Availability[];
   overrides: Override[];
 }) {
@@ -31,6 +36,8 @@ function StaffRow({
   const [start, setStart] = useState("09:00");
   const [end, setEnd] = useState("18:00");
   const [showOverrides, setShowOverrides] = useState(false);
+
+  const staffServiceByServiceId = new Map(staffServices.map((s) => [s.service_id, s]));
 
   async function toggleService(serviceId: string, checked: boolean) {
     if (checked) {
@@ -42,6 +49,16 @@ function StaffRow({
         .eq("staff_id", member.id)
         .eq("service_id", serviceId);
     }
+    router.refresh();
+  }
+
+  async function updateOverride(serviceId: string, field: "price_override" | "duration_override", value: string) {
+    const parsed = value === "" ? null : Number(value);
+    await supabase
+      .from("staff_services")
+      .update({ [field]: parsed })
+      .eq("staff_id", member.id)
+      .eq("service_id", serviceId);
     router.refresh();
   }
 
@@ -75,17 +92,41 @@ function StaffRow({
       </div>
 
       {services.length > 0 && (
-        <div className="flex flex-wrap gap-3">
-          {services.map((s) => (
-            <label key={s.id} className="flex items-center gap-1.5 text-xs text-neutral-600">
-              <input
-                type="checkbox"
-                checked={assignedServiceIds.has(s.id)}
-                onChange={(e) => toggleService(s.id, e.target.checked)}
-              />
-              {s.name}
-            </label>
-          ))}
+        <div className="flex flex-col gap-2">
+          {services.map((s) => {
+            const staffService = staffServiceByServiceId.get(s.id);
+            const assigned = !!staffService;
+            return (
+              <div key={s.id} className="flex flex-wrap items-center gap-2 text-xs text-neutral-600">
+                <label className="flex items-center gap-1.5">
+                  <input
+                    type="checkbox"
+                    checked={assigned}
+                    onChange={(e) => toggleService(s.id, e.target.checked)}
+                  />
+                  {s.name}
+                </label>
+                {assigned && (
+                  <>
+                    <input
+                      type="number"
+                      value={staffService.duration_override ?? ""}
+                      onChange={(e) => updateOverride(s.id, "duration_override", e.target.value)}
+                      placeholder={`padrão: ${s.duration_minutes}min`}
+                      className="w-28 rounded-lg border border-neutral-200 bg-white px-2 py-1"
+                    />
+                    <input
+                      type="number"
+                      value={staffService.price_override ?? ""}
+                      onChange={(e) => updateOverride(s.id, "price_override", e.target.value)}
+                      placeholder={`padrão: R$ ${s.price ?? "-"}`}
+                      className="w-28 rounded-lg border border-neutral-200 bg-white px-2 py-1"
+                    />
+                  </>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 
@@ -182,9 +223,7 @@ export function StaffEditor({
           key={member.id}
           member={member}
           services={services}
-          assignedServiceIds={
-            new Set(staffServices.filter((s) => s.staff_id === member.id).map((s) => s.service_id))
-          }
+          staffServices={staffServices.filter((s) => s.staff_id === member.id)}
           availability={availability.filter((a) => a.staff_id === member.id)}
           overrides={overrides.filter((o) => o.staff_id === member.id)}
         />

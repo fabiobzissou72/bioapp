@@ -1,4 +1,5 @@
 import { redirect, notFound } from "next/navigation";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { BiositeInfoForm } from "@/components/editor/BiositeInfoForm";
@@ -6,6 +7,7 @@ import { ButtonsEditor } from "@/components/editor/ButtonsEditor";
 import { ServicesEditor } from "@/components/editor/ServicesEditor";
 import { StaffEditor } from "@/components/editor/StaffEditor";
 import { CatalogEditor } from "@/components/editor/CatalogEditor";
+import { QrCodeButton } from "@/components/editor/QrCodeButton";
 import type { BiositeButton, CatalogGroup, CatalogItem, Service, Staff } from "@/lib/types";
 
 export const revalidate = 0;
@@ -26,7 +28,7 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
       supabase.from("buttons").select("*").eq("biosite_id", id).order("position"),
       supabase.from("services").select("*").eq("biosite_id", id).order("created_at"),
       supabase.from("staff").select("*").eq("biosite_id", id).order("created_at"),
-      supabase.from("staff_services").select("staff_id, service_id"),
+      supabase.from("staff_services").select("staff_id, service_id, price_override, duration_override"),
     ]);
 
   const staffIds = (staff || []).map((s: Staff) => s.id);
@@ -53,20 +55,31 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
     (itemsByGroup[item.group_id] ||= []).push(item);
   }
 
+  const headerList = await headers();
+  const host = headerList.get("host");
+  const protocol = host?.startsWith("localhost") ? "http" : "https";
+  const publicUrl = `${protocol}://${host}/${biosite.slug}`;
+
   return (
     <main className="mx-auto min-h-screen w-full max-w-2xl px-4 pb-16 pt-6">
       <div className="mb-4 flex items-center justify-between">
         <Link href="/painel" className="text-sm text-neutral-500 hover:text-neutral-800">
           ← Voltar
         </Link>
-        <a
-          href={`/${biosite.slug}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm font-medium text-pink-600"
-        >
-          Ver biosite →
-        </a>
+        <div className="flex items-center gap-4">
+          <Link href={`/painel/${id}/estatisticas`} className="text-sm font-medium text-neutral-600">
+            Estatísticas
+          </Link>
+          <QrCodeButton url={publicUrl} />
+          <a
+            href={`/${biosite.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-medium text-pink-600"
+          >
+            Ver biosite →
+          </a>
+        </div>
       </div>
 
       <BiositeInfoForm biosite={biosite} />

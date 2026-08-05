@@ -11,7 +11,7 @@ export default async function AgendarPage({ params }: { params: Promise<{ slug: 
 
   const { data: biosite } = await supabase
     .from("biosites")
-    .select("id, business_name, primary_color, logo_url")
+    .select("id, business_name, primary_color, logo_url, theme")
     .eq("slug", slug)
     .eq("published", true)
     .single();
@@ -27,7 +27,10 @@ export default async function AgendarPage({ params }: { params: Promise<{ slug: 
 
   const [{ data: staffServices }, { data: availability }] = await Promise.all([
     staffIds.length
-      ? supabase.from("staff_services").select("staff_id, service_id").in("staff_id", staffIds)
+      ? supabase
+          .from("staff_services")
+          .select("staff_id, service_id, price_override, duration_override")
+          .in("staff_id", staffIds)
       : Promise.resolve({ data: [] }),
     staffIds.length
       ? supabase
@@ -37,14 +40,21 @@ export default async function AgendarPage({ params }: { params: Promise<{ slug: 
       : Promise.resolve({ data: [] }),
   ]);
 
+  const dark = biosite.theme === "dark";
+
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-5 bg-[#faf9f9] px-4 pb-10 pt-6">
+    <main
+      className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-5 px-4 pb-10 pt-6"
+      style={{ backgroundColor: dark ? "#0f0f10" : "#faf9f9" }}
+    >
       <div className="flex items-center gap-3">
         {biosite.logo_url && (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={biosite.logo_url} alt="" className="h-10 w-10 rounded-full object-cover" />
         )}
-        <h1 className="text-lg font-bold text-neutral-900">{biosite.business_name}</h1>
+        <h1 className={`text-lg font-bold ${dark ? "text-neutral-50" : "text-neutral-900"}`}>
+          {biosite.business_name}
+        </h1>
       </div>
 
       <BookingFlow

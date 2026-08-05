@@ -11,9 +11,13 @@ const ASPECT_CLASS: Record<CatalogItem["aspect"], string> = {
   original: "",
 };
 
-function ItemCard({ item, primaryColor }: { item: CatalogItem; primaryColor: string }) {
+function ItemCard({ item, primaryColor, dark }: { item: CatalogItem; primaryColor: string; dark: boolean }) {
   return (
-    <div className="w-full overflow-hidden rounded-2xl border border-neutral-100 bg-white shadow-sm">
+    <div
+      className={`w-full overflow-hidden rounded-2xl border shadow-sm ${
+        dark ? "border-neutral-800 bg-neutral-900" : "border-neutral-100 bg-white"
+      }`}
+    >
       {item.media_url && (
         <div className={`w-full overflow-hidden bg-neutral-100 ${ASPECT_CLASS[item.aspect]}`}>
           {item.media_type === "video" ? (
@@ -36,8 +40,12 @@ function ItemCard({ item, primaryColor }: { item: CatalogItem; primaryColor: str
         </div>
       )}
       <div className="p-4" style={{ textAlign: item.cta_align }}>
-        {item.title && <h4 className="font-semibold text-neutral-900">{item.title}</h4>}
-        {item.description && <p className="mt-1 text-sm text-neutral-500">{item.description}</p>}
+        {item.title && (
+          <h4 className={`font-semibold ${dark ? "text-neutral-50" : "text-neutral-900"}`}>{item.title}</h4>
+        )}
+        {item.description && (
+          <p className={`mt-1 text-sm ${dark ? "text-neutral-400" : "text-neutral-500"}`}>{item.description}</p>
+        )}
         {item.cta_label && item.cta_url && (
           <a
             href={item.cta_url}
@@ -58,10 +66,12 @@ function CarouselGroup({
   items,
   intervalSeconds,
   primaryColor,
+  dark,
 }: {
   items: CatalogItem[];
   intervalSeconds: number;
   primaryColor: string;
+  dark: boolean;
 }) {
   const [index, setIndex] = useState(0);
 
@@ -77,7 +87,7 @@ function CarouselGroup({
 
   return (
     <div>
-      <ItemCard item={items[index]} primaryColor={primaryColor} />
+      <ItemCard item={items[index]} primaryColor={primaryColor} dark={dark} />
       {items.length > 1 && (
         <div className="mt-2 flex justify-center gap-1.5">
           {items.map((item, i) => (
@@ -97,10 +107,12 @@ export function CatalogSection({
   groups,
   itemsByGroup,
   primaryColor,
+  dark = false,
 }: {
   groups: CatalogGroup[];
   itemsByGroup: Record<string, CatalogItem[]>;
   primaryColor: string;
+  dark?: boolean;
 }) {
   if (groups.length === 0) return null;
 
@@ -118,6 +130,7 @@ export function CatalogSection({
               items={items}
               intervalSeconds={group.interval_seconds}
               primaryColor={primaryColor}
+              dark={dark}
             />
           );
         }
@@ -125,7 +138,7 @@ export function CatalogSection({
         return (
           <div key={group.id} className="flex flex-col gap-3">
             {items.map((item) => (
-              <ItemCard key={item.id} item={item} primaryColor={primaryColor} />
+              <ItemCard key={item.id} item={item} primaryColor={primaryColor} dark={dark} />
             ))}
           </div>
         );

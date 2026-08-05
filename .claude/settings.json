@@ -30,7 +30,14 @@
       "Bash(curl -s https://minhabio.vercel.app/)",
       "Bash(curl -s https://minhabioapp.vercel.app/login)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" https://minhabioapp.vercel.app/)",
-      "Bash(curl -s -o /dev/null -w \"minhabioapp.vercel.app -> %{http_code}\\\\n\" https://minhabioapp.vercel.app/login)"
+      "Bash(curl -s -o /dev/null -w \"minhabioapp.vercel.app -> %{http_code}\\\\n\" https://minhabioapp.vercel.app/login)",
+      "Bash(mkdir -p \"/c/Users/fbzis/Desktop/Bio Insta/src/app/painel/\\(dashboard\\)/perfil\")",
+      "Bash(rm \"/c/Users/fbzis/Desktop/Bio Insta/src/app/painel/page.tsx\")",
+      "Bash(rm -rf \"/c/Users/fbzis/Desktop/Bio Insta/src/app/painel/perfil\")",
+      "Bash(rm \"/c/Users/fbzis/Desktop/Bio Insta/src/components/dashboard/DashboardHeader.tsx\")"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app\\painel\\(dashboard)"
     ]
   }
 }

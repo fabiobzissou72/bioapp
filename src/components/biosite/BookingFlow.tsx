@@ -1,12 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { MonthCalendar } from "@/components/ui/MonthCalendar";
 import type { Service, Staff } from "@/lib/types";
 
 type Availability = { id: string; staff_id: string; weekday: number; start_time: string; end_time: string };
-type StaffService = { staff_id: string; service_id: string };
+type StaffService = {
+  staff_id: string;
+  service_id: string;
+  price_override: number | null;
+  duration_override: number | null;
+};
 type OccupiedBlock = { start: number; end: number };
 
 function toTimeMinutes(time: string) {
@@ -66,11 +71,20 @@ export function BookingFlow({
 
   const servicesById = useMemo(() => new Map(services.map((s) => [s.id, s])), [services]);
 
-  // Each slot occupies the service's own duration, so a 60min service offers
+  const getEffectiveDuration = useCallback(
+    (staffId: string, serviceId: string) => {
+      const override = staffServices.find((s) => s.staff_id === staffId && s.service_id === serviceId);
+      return override?.duration_override ?? servicesById.get(serviceId)?.duration_minutes ?? 30;
+    },
+    [staffServices, servicesById]
+  );
+
+  // Each slot occupies the service's own duration (or the professional's
+  // custom duration for that service, if set), so a 60min service offers
   // hourly starts and a 30min service offers half-hourly starts — no overlap.
   const slots = useMemo(() => {
     if (!date || !activeStaff || !service) return [];
-    const duration = service.duration_minutes;
+    const duration = getEffectiveDuration(activeStaff.id, service.id);
     const weekday = date.getDay();
     const windows = availability.filter((a) => a.staff_id === activeStaff.id && a.weekday === weekday);
     const result: string[] = [];
@@ -84,7 +98,7 @@ export function BookingFlow({
       }
     }
     return result;
-  }, [date, activeStaff, service, availability, occupied]);
+  }, [date, activeStaff, service, availability, occupied, getEffectiveDuration]);
 
   async function selectDate(d: Date) {
     setDate(d);
@@ -108,7 +122,7 @@ export function BookingFlow({
     ]);
     const bookingBlocks = (bookings || []).map((b: { booking_time: string; service_id: string | null }) => {
       const start = toTimeMinutes(b.booking_time.slice(0, 5));
-      const bookedDuration = (b.service_id && servicesById.get(b.service_id)?.duration_minutes) || 30;
+      const bookedDuration = b.service_id ? getEffectiveDuration(activeStaff.id, b.service_id) : 30;
       return { start, end: start + bookedDuration };
     });
     const blockedHourBlocks = (overrides?.blocked_hours || []).map((hour: number) => ({
