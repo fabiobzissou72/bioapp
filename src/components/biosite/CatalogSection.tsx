@@ -109,12 +109,12 @@ function GridGroup({
 
   return (
     <div>
-      <div className="grid grid-cols-3 gap-1.5">
+      <div className="flex flex-wrap justify-center gap-1.5">
         {items.map((item) => (
           <button
             key={item.id}
             onClick={() => setSelected(item)}
-            className="relative aspect-square w-full overflow-hidden rounded-lg bg-neutral-100"
+            className="relative aspect-square w-[31%] overflow-hidden rounded-lg bg-neutral-100"
           >
             {item.media_url &&
               (item.media_type === "video" ? (

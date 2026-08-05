@@ -1,15 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import QRCode from "qrcode";
 import type { BiositeButton } from "@/lib/types";
+
+// Escapes characters the WIFI: QR format treats as separators.
+function escapeWifiField(value: string) {
+  return value.replace(/([\\;,:"])/g, "\\$1");
+}
 
 export function WifiButton({ button, style }: { button: BiositeButton; style: React.CSSProperties }) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+
+  const ssid = button.config.wifi_ssid;
+  const password = button.config.wifi_password;
+
+  useEffect(() => {
+    if (!open || !ssid) return;
+    const payload = `WIFI:T:${password ? "WPA" : "nopass"};S:${escapeWifiField(ssid)};${
+      password ? `P:${escapeWifiField(password)};` : ""
+    };`;
+    QRCode.toDataURL(payload, { width: 220, margin: 1 }).then(setQrDataUrl);
+  }, [open, ssid, password]);
 
   async function copyPassword() {
-    if (!button.config.wifi_password) return;
-    await navigator.clipboard.writeText(button.config.wifi_password);
+    if (!password) return;
+    await navigator.clipboard.writeText(password);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
@@ -39,14 +57,23 @@ export function WifiButton({ button, style }: { button: BiositeButton; style: Re
                 ✕
               </button>
             </div>
-            <div className="flex flex-col gap-3 text-sm">
-              <div>
+            <div className="flex flex-col items-center gap-3 text-sm">
+              {qrDataUrl && (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={qrDataUrl} alt="QR Code do Wi-Fi" className="h-48 w-48" />
+                  <p className="text-center text-xs text-neutral-400">
+                    Aponte a câmera do celular pra conectar direto
+                  </p>
+                </>
+              )}
+              <div className="w-full">
                 <span className="text-neutral-500">Rede</span>
-                <p className="font-medium text-neutral-900">{button.config.wifi_ssid || "—"}</p>
+                <p className="font-medium text-neutral-900">{ssid || "—"}</p>
               </div>
-              <div>
+              <div className="w-full">
                 <span className="text-neutral-500">Senha</span>
-                <p className="font-medium text-neutral-900">{button.config.wifi_password || "—"}</p>
+                <p className="font-medium text-neutral-900">{password || "—"}</p>
               </div>
               <button
                 onClick={copyPassword}

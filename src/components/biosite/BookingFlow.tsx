@@ -161,6 +161,19 @@ export function BookingFlow({
     setDone(true);
   }
 
+  function goBack() {
+    if (time) {
+      setTime(null);
+    } else if (date) {
+      setDate(null);
+    } else if (manualStaff) {
+      setManualStaff(null);
+    } else if (service) {
+      setService(null);
+      setManualStaff(null);
+    }
+  }
+
   if (done) {
     return (
       <div className="flex flex-col items-center gap-2 rounded-2xl bg-white p-6 text-center shadow-sm">
@@ -175,6 +188,15 @@ export function BookingFlow({
 
   return (
     <div className="flex flex-col gap-5">
+      {service && (
+        <button
+          onClick={goBack}
+          className="flex items-center gap-1 self-start text-sm font-medium text-neutral-500 hover:text-neutral-800"
+        >
+          ← Voltar
+        </button>
+      )}
+
       <section>
         <h2 className="mb-2 text-sm font-semibold text-neutral-700">Escolha o serviço</h2>
         <div className="flex flex-col gap-2">
