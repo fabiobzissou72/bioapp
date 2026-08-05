@@ -60,7 +60,8 @@
       "Bash(curl -s -o /dev/null -w \"status: %{http_code}\\\\ntime: %{time_total}s\\\\n\" -X POST \"https://webhook.fbzia.com.br/webhook/bioinsta\" -H \"Content-Type: application/json\" -d '{\"event\":\"test\",\"message\":\"teste de conectividade\"}' --max-time 10)",
       "Bash(curl -s \"https://webhook.site/token\" -X POST -H \"Content-Type: application/json\" -d '{}')",
       "Bash(curl -s -X POST https://minhabioapp.vercel.app/api/bookings -H 'Content-Type: application/json' -d '{ *)",
-      "Bash(curl -s \"https://webhook.site/token/311656e0-09c9-4ad3-97d9-61e765fbae4d/requests\")"
+      "Bash(curl -s \"https://webhook.site/token/311656e0-09c9-4ad3-97d9-61e765fbae4d/requests\")",
+      "Bash(time curl -s -X POST https://minhabioapp.vercel.app/api/bookings -H 'Content-Type: application/json' -d '{ *)"
     ],
     "additionalDirectories": [
       "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app\\painel\\(dashboard)",

@@ -40,7 +40,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const { id } = await request.json();
+  const { id, cancelledBy } = await request.json();
   if (!id) return NextResponse.json({ error: "Faltou o id." }, { status: 400 });
 
   const admin = createAdminClient();
@@ -74,7 +74,7 @@ export async function POST(request: Request) {
     customer_phone: booking.customer_phone,
     booking_date: booking.booking_date,
     booking_time: booking.booking_time,
-    cancelled_by: "customer",
+    cancelled_by: cancelledBy || "customer",
   });
 
   return NextResponse.json({ ok: true });

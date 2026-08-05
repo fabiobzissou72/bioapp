@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 
 type Booking = {
   id: string;
@@ -42,13 +41,19 @@ export function BookingCard({
   canCancel: boolean;
 }) {
   const router = useRouter();
-  const supabase = createClient();
   const [cancelling, setCancelling] = useState(false);
 
   async function handleCancel() {
     if (!confirm("Cancelar esse agendamento? O horário volta a ficar disponível.")) return;
     setCancelling(true);
-    await supabase.from("bookings").update({ status: "cancelled" }).eq("id", booking.id);
+    // Goes through the same API route as the customer-side cancel so the
+    // webhook (booking.cancelled) fires here too — a direct client-side
+    // Supabase update would skip it entirely.
+    await fetch("/api/my-bookings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: booking.id, cancelledBy: "business" }),
+    });
     setCancelling(false);
     router.refresh();
   }
