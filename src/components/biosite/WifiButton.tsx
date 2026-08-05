@@ -19,9 +19,12 @@ export function WifiButton({ button, style }: { button: BiositeButton; style: Re
 
   useEffect(() => {
     if (!open || !ssid) return;
-    const payload = `WIFI:T:${password ? "WPA" : "nopass"};S:${escapeWifiField(ssid)};${
+    // S before T before P before H is the order most phone camera apps
+    // (notably iOS) require to recognize this as a joinable network instead
+    // of plain text.
+    const payload = `WIFI:S:${escapeWifiField(ssid)};T:${password ? "WPA" : "nopass"};${
       password ? `P:${escapeWifiField(password)};` : ""
-    };`;
+    }H:false;;`;
     QRCode.toDataURL(payload, { width: 220, margin: 1 }).then(setQrDataUrl);
   }, [open, ssid, password]);
 
