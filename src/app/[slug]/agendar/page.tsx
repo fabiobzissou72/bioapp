@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { BookingFlow } from "@/components/biosite/BookingFlow";
 import { MyBookings } from "@/components/biosite/MyBookings";
@@ -48,6 +49,15 @@ export default async function AgendarPage({ params }: { params: Promise<{ slug: 
       className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-5 px-4 pb-10 pt-6"
       style={{ backgroundColor: dark ? "#0f0f10" : "#faf9f9" }}
     >
+      <Link
+        href={`/${slug}`}
+        className={`flex items-center gap-1 self-start text-sm font-medium ${
+          dark ? "text-neutral-400 hover:text-neutral-100" : "text-neutral-500 hover:text-neutral-800"
+        }`}
+      >
+        ← Voltar
+      </Link>
+
       <div className="flex items-center gap-3">
         {biosite.logo_url && (
           // eslint-disable-next-line @next/next/no-img-element
