@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ButtonList } from "@/components/biosite/ButtonList";
 import { CatalogSection } from "@/components/biosite/CatalogSection";
 import { MyBookings } from "@/components/biosite/MyBookings";
+import { AddressBlock } from "@/components/biosite/AddressBlock";
 import type { BiositeButton, CatalogGroup, CatalogItem } from "@/lib/types";
 
 export const revalidate = 0;
@@ -84,6 +85,9 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
   }
 
   const dark = biosite.theme === "dark";
+  const allButtons = (buttons || []) as BiositeButton[];
+  const addressButtons = allButtons.filter((b) => b.type === "address");
+  const otherButtons = allButtons.filter((b) => b.type !== "address");
 
   return (
     <main
@@ -137,7 +141,7 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
       <ButtonList
         biositeId={biosite.id}
         slug={slug}
-        buttons={(buttons || []) as BiositeButton[]}
+        buttons={otherButtons}
         merchantName={biosite.business_name}
         primaryColor={biosite.primary_color}
         buttonTextColor={biosite.button_text_color}
@@ -149,6 +153,10 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
         primaryColor={biosite.primary_color}
         dark={dark}
       />
+
+      {addressButtons.map((button) => (
+        <AddressBlock key={button.id} button={button} />
+      ))}
 
       {profile?.agency_name && (
         <a
