@@ -43,5 +43,21 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // A client_access account is a read-only viewer, never an agency —
+  // bounce it out of the agency dashboard even if it somehow signs in there.
+  if (user?.email && request.nextUrl.pathname.startsWith("/painel")) {
+    const { data: clientAccess } = await supabase
+      .from("client_access")
+      .select("id")
+      .eq("email", user.email)
+      .limit(1)
+      .maybeSingle();
+    if (clientAccess) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/cliente";
+      return NextResponse.redirect(url);
+    }
+  }
+
   return response;
 }

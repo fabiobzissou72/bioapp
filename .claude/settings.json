@@ -41,7 +41,9 @@
       "Bash(grep -n \"addButton\\\\|Cancelar\\\\|Adicionar$\\\\|Salvando\" \"c:\\\\Users\\\\fbzis\\\\Desktop\\\\Bio Insta\\\\src\\\\components\\\\editor\\\\ButtonsEditor.tsx\")",
       "Bash(mkdir -p \"/c/Users/fbzis/Desktop/Bio Insta/src/app/api/client-access\")",
       "Bash(mkdir -p \"/c/Users/fbzis/Desktop/Bio Insta/src/app/cliente/login\")",
-      "Bash(mkdir -p \"/c/Users/fbzis/Desktop/Bio Insta/src/app/superadmin\")"
+      "Bash(mkdir -p \"/c/Users/fbzis/Desktop/Bio Insta/src/app/superadmin\")",
+      "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_new_features.py\")",
+      "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_client_login.py\")"
     ],
     "additionalDirectories": [
       "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app\\painel\\(dashboard)",

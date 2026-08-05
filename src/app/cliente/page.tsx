@@ -35,6 +35,11 @@ export default async function ClientePage() {
     .eq("id", access.biosite_id)
     .single();
 
+  const { count: totalClicks } = await supabase
+    .from("clicks")
+    .select("id", { count: "exact", head: true })
+    .eq("biosite_id", access.biosite_id);
+
   const { data: bookings } = await supabase
     .from("bookings")
     .select("id, customer_name, customer_phone, notes, booking_date, booking_time, status, service_id, staff_id")
@@ -87,6 +92,21 @@ export default async function ClientePage() {
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-xl font-bold text-neutral-900">{biosite?.business_name}</h1>
         <ClienteLogoutButton />
+      </div>
+
+      <div className="mb-8 grid grid-cols-3 gap-2">
+        <div className="rounded-lg border border-neutral-200 p-3 text-center">
+          <p className="text-xl font-bold text-neutral-900">{upcoming.length}</p>
+          <p className="text-xs text-neutral-500">próximos</p>
+        </div>
+        <div className="rounded-lg border border-neutral-200 p-3 text-center">
+          <p className="text-xl font-bold text-neutral-900">{(bookings || []).length}</p>
+          <p className="text-xs text-neutral-500">total agendado</p>
+        </div>
+        <div className="rounded-lg border border-neutral-200 p-3 text-center">
+          <p className="text-xl font-bold text-neutral-900">{totalClicks || 0}</p>
+          <p className="text-xs text-neutral-500">cliques no site</p>
+        </div>
       </div>
 
       <h2 className="mb-2 text-sm font-semibold text-neutral-700">
