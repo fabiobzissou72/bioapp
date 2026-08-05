@@ -34,7 +34,8 @@
       "Bash(mkdir -p \"/c/Users/fbzis/Desktop/Bio Insta/src/app/painel/\\(dashboard\\)/perfil\")",
       "Bash(rm \"/c/Users/fbzis/Desktop/Bio Insta/src/app/painel/page.tsx\")",
       "Bash(rm -rf \"/c/Users/fbzis/Desktop/Bio Insta/src/app/painel/perfil\")",
-      "Bash(rm \"/c/Users/fbzis/Desktop/Bio Insta/src/components/dashboard/DashboardHeader.tsx\")"
+      "Bash(rm \"/c/Users/fbzis/Desktop/Bio Insta/src/components/dashboard/DashboardHeader.tsx\")",
+      "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_prod.py\")"
     ],
     "additionalDirectories": [
       "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app\\painel\\(dashboard)"
