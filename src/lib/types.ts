@@ -79,7 +79,7 @@ export type CatalogGroup = {
   biosite_id: string;
   name: string;
   enabled: boolean;
-  layout: "stacked" | "carousel";
+  layout: "stacked" | "carousel" | "grid";
   interval_seconds: number;
   position: number;
 };

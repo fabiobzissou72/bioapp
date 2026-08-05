@@ -73,6 +73,77 @@ function ItemCard({ item, primaryColor, dark }: { item: CatalogItem; primaryColo
   );
 }
 
+function Lightbox({
+  item,
+  primaryColor,
+  dark,
+  onClose,
+}: {
+  item: CatalogItem;
+  primaryColor: string;
+  dark: boolean;
+  onClose: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={onClose}>
+      <div className="w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
+        <button onClick={onClose} className="mb-2 ml-auto block text-sm font-medium text-white">
+          Fechar ✕
+        </button>
+        <ItemCard item={item} primaryColor={primaryColor} dark={dark} />
+      </div>
+    </div>
+  );
+}
+
+function GridGroup({
+  items,
+  primaryColor,
+  dark,
+}: {
+  items: CatalogItem[];
+  primaryColor: string;
+  dark: boolean;
+}) {
+  const [selected, setSelected] = useState<CatalogItem | null>(null);
+
+  return (
+    <div>
+      <div className="grid grid-cols-3 gap-1.5">
+        {items.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => setSelected(item)}
+            className="relative aspect-square w-full overflow-hidden rounded-lg bg-neutral-100"
+          >
+            {item.media_url &&
+              (item.media_type === "video" ? (
+                <video src={item.media_url} className="h-full w-full object-cover" muted playsInline />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={item.media_url} alt={item.title || ""} className="h-full w-full object-cover" />
+              ))}
+            {item.media_type === "video" && (
+              <span className="absolute right-1 top-1 rounded-full bg-black/60 px-1.5 py-0.5 text-[10px] font-medium text-white">
+                ▶
+              </span>
+            )}
+            <span
+              className="absolute left-1 top-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium"
+              style={{ backgroundColor: primaryColor, color: getContrastTextColor(primaryColor) }}
+            >
+              {item.item_type === "service" ? "Serviço" : "Produto"}
+            </span>
+          </button>
+        ))}
+      </div>
+      {selected && (
+        <Lightbox item={selected} primaryColor={primaryColor} dark={dark} onClose={() => setSelected(null)} />
+      )}
+    </div>
+  );
+}
+
 function CarouselGroup({
   items,
   intervalSeconds,
@@ -144,6 +215,10 @@ export function CatalogSection({
               dark={dark}
             />
           );
+        }
+
+        if (group.layout === "grid") {
+          return <GridGroup key={group.id} items={items} primaryColor={primaryColor} dark={dark} />;
         }
 
         return (

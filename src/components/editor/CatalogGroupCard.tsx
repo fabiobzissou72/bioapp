@@ -38,11 +38,8 @@ export function CatalogGroupCard({
     router.refresh();
   }
 
-  async function setCarousel(carousel: boolean) {
-    await supabase
-      .from("catalog_groups")
-      .update({ layout: carousel ? "carousel" : "stacked" })
-      .eq("id", group.id);
+  async function setLayout(layout: CatalogGroup["layout"]) {
+    await supabase.from("catalog_groups").update({ layout }).eq("id", group.id);
     router.refresh();
   }
 
@@ -117,14 +114,29 @@ export function CatalogGroupCard({
       {open && (
         <div className="flex flex-col gap-3 border-t border-neutral-200 p-3">
           <div className="flex flex-col gap-2 rounded-lg bg-neutral-50 p-3">
-            <label className="flex items-center gap-2 text-sm text-neutral-600">
-              <input
-                type="checkbox"
-                checked={group.layout === "carousel"}
-                onChange={(e) => setCarousel(e.target.checked)}
-              />
-              Passagem automática (os itens trocam sozinhos como um carrossel)
-            </label>
+            <span className="text-sm font-medium text-neutral-700">Como exibir</span>
+            <div className="flex flex-wrap gap-2">
+              {(
+                [
+                  { value: "stacked", label: "Empilhado" },
+                  { value: "carousel", label: "Carrossel" },
+                  { value: "grid", label: "Grade (miniaturas)" },
+                ] as const
+              ).map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setLayout(option.value)}
+                  className="rounded-full border px-3 py-1.5 text-xs font-medium"
+                  style={
+                    group.layout === option.value
+                      ? { borderColor: "#db2777", backgroundColor: "#fdf2f8", color: "#db2777" }
+                      : { borderColor: "#e5e5e5", color: "#525252" }
+                  }
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
             {group.layout === "carousel" && (
               <label className="flex items-center gap-2 text-xs text-neutral-500">
                 Tempo entre itens: {group.interval_seconds}s
