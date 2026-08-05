@@ -5,6 +5,8 @@ import { ButtonList } from "@/components/biosite/ButtonList";
 import { CatalogSection } from "@/components/biosite/CatalogSection";
 import { MyBookings } from "@/components/biosite/MyBookings";
 import { AddressBlock } from "@/components/biosite/AddressBlock";
+import { SocialIconRow } from "@/components/biosite/SocialIconRow";
+import { SOCIAL_BUTTON_TYPES } from "@/lib/socialTypes";
 import type { BiositeButton, CatalogGroup, CatalogItem } from "@/lib/types";
 
 export const revalidate = 0;
@@ -87,7 +89,8 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
   const dark = biosite.theme === "dark";
   const allButtons = (buttons || []) as BiositeButton[];
   const addressButtons = allButtons.filter((b) => b.type === "address");
-  const otherButtons = allButtons.filter((b) => b.type !== "address");
+  const socialButtons = allButtons.filter((b) => SOCIAL_BUTTON_TYPES.has(b.type));
+  const otherButtons = allButtons.filter((b) => b.type !== "address" && !SOCIAL_BUTTON_TYPES.has(b.type));
 
   return (
     <main
@@ -157,6 +160,8 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
       {addressButtons.map((button) => (
         <AddressBlock key={button.id} button={button} />
       ))}
+
+      <SocialIconRow biositeId={biosite.id} buttons={socialButtons} />
 
       {profile?.agency_name && (
         <a
