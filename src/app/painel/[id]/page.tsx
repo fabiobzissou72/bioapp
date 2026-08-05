@@ -10,6 +10,7 @@ import { CatalogEditor } from "@/components/editor/CatalogEditor";
 import { QrCodeButton } from "@/components/editor/QrCodeButton";
 import { SeoEditor } from "@/components/editor/SeoEditor";
 import { ClientAccessEditor } from "@/components/editor/ClientAccessEditor";
+import { NotificationWebhookEditor } from "@/components/editor/NotificationWebhookEditor";
 import type { BiositeButton, CatalogGroup, CatalogItem, Service, Staff } from "@/lib/types";
 
 export const revalidate = 0;
@@ -131,6 +132,11 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
       <section className="mt-8">
         <h2 className="mb-3 text-lg font-semibold text-neutral-900">Acesso do cliente</h2>
         <ClientAccessEditor biositeId={id} accesses={clientAccesses || []} />
+      </section>
+
+      <section className="mt-8">
+        <h2 className="mb-3 text-lg font-semibold text-neutral-900">Notificações (webhook)</h2>
+        <NotificationWebhookEditor biositeId={id} webhookUrl={biosite.notification_webhook_url} />
       </section>
     </main>
   );

@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { MonthCalendar } from "@/components/ui/MonthCalendar";
+import { rememberBooking } from "@/lib/myBookings";
 import type { Service, Staff } from "@/lib/types";
 
 type Availability = { id: string; staff_id: string; weekday: number; start_time: string; end_time: string };
@@ -136,21 +137,27 @@ export function BookingFlow({
     if (!service || !date || !time || !name || !phone) return;
     setSubmitting(true);
     setError(null);
-    const { error: insertError } = await supabase.from("bookings").insert({
-      biosite_id: biositeId,
-      service_id: service.id,
-      staff_id: activeStaff?.id ?? null,
-      customer_name: name,
-      customer_phone: phone,
-      notes: notes || null,
-      booking_date: formatDateISO(date),
-      booking_time: time,
+    const res = await fetch("/api/bookings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        biositeId,
+        serviceId: service.id,
+        staffId: activeStaff?.id ?? null,
+        customerName: name,
+        customerPhone: phone,
+        notes: notes || null,
+        bookingDate: formatDateISO(date),
+        bookingTime: time,
+      }),
     });
+    const data = await res.json();
     setSubmitting(false);
-    if (insertError) {
+    if (!res.ok) {
       setError("Não foi possível confirmar. Tente outro horário.");
       return;
     }
+    rememberBooking(biositeId, data.id);
     setDone(true);
   }
 

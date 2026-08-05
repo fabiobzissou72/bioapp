@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { BookingFlow } from "@/components/biosite/BookingFlow";
+import { MyBookings } from "@/components/biosite/MyBookings";
 import type { Service, Staff } from "@/lib/types";
 
 export const revalidate = 0;
@@ -56,6 +57,8 @@ export default async function AgendarPage({ params }: { params: Promise<{ slug: 
           {biosite.business_name}
         </h1>
       </div>
+
+      <MyBookings biositeId={biosite.id} />
 
       <BookingFlow
         biositeId={biosite.id}
