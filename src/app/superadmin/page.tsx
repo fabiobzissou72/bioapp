@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { SuperAdminTable } from "@/components/superadmin/SuperAdminTable";
 
@@ -35,10 +36,15 @@ export default async function SuperAdminPage() {
 
   return (
     <main className="mx-auto min-h-screen w-full max-w-5xl px-4 pb-16 pt-6">
-      <h1 className="mb-1 text-xl font-bold text-neutral-900">Super Admin — Empresas cadastradas</h1>
-      <p className="mb-6 text-sm text-neutral-500">
-        Todos os biosites de todas as agências. Total: {rows.length}
-      </p>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="mb-1 text-xl font-bold text-neutral-900">Super Admin — Empresas cadastradas</h1>
+          <p className="text-sm text-neutral-500">Todos os biosites de todas as agências. Total: {rows.length}</p>
+        </div>
+        <Link href="/superadmin/leads" className="text-sm font-medium text-pink-600">
+          Leads (Instagram) →
+        </Link>
+      </div>
       <SuperAdminTable rows={rows} />
     </main>
   );

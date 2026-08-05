@@ -52,13 +52,19 @@
       "Bash(mkdir -p \"/c/Users/fbzis/Desktop/Bio Insta/src/app/api/bookings\")",
       "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_final_batch.py\")",
       "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_cliente_redesign.py\")",
-      "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_cliente_redesign2.py\")"
+      "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_cliente_redesign2.py\")",
+      "Bash(mkdir -p \"/c/Users/fbzis/Desktop/Bio Insta/src/app/api/leads/analyze\")",
+      "Bash(mkdir -p \"/c/Users/fbzis/Desktop/Bio Insta/src/app/superadmin/leads\")",
+      "Bash(mkdir -p \"/c/Users/fbzis/Desktop/Bio Insta/chrome-extension\")"
     ],
     "additionalDirectories": [
       "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app\\painel\\(dashboard)",
       "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app\\api",
       "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app\\cliente",
-      "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app"
+      "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app",
+      "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app\\api\\leads",
+      "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app\\superadmin",
+      "C:\\Users\\fbzis\\Desktop\\Bio Insta"
     ]
   }
 }

@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Bio Insta — Captador de Leads",
+  "version": "1.0.0",
+  "description": "Analisa perfis do Instagram enquanto você navega e sugere abordagens de venda para o Bio Insta.",
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://www.instagram.com/*",
+    "https://minhabioapp.vercel.app/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Bio Insta — Captador de Leads"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.instagram.com/*"],
+      "js": ["content-script.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
