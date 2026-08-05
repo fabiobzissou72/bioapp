@@ -14,7 +14,7 @@ export async function POST(request: Request) {
 
   const { data: biosite } = await admin
     .from("biosites")
-    .select("business_name, published, notification_webhook_url")
+    .select("business_name, published, notification_webhook_url, business_whatsapp")
     .eq("id", biositeId)
     .single();
   if (!biosite?.published) {
@@ -45,8 +45,11 @@ export async function POST(request: Request) {
     staffId ? admin.from("staff").select("name").eq("id", staffId).single() : Promise.resolve({ data: null }),
   ]);
 
-  notifyWebhook(biosite.notification_webhook_url, "booking.created", {
+  // Must be awaited — on Vercel, unawaited work after the response is sent
+  // is not guaranteed to run to completion (the function can freeze/exit).
+  await notifyWebhook(biosite.notification_webhook_url, "booking.created", {
     business_name: biosite.business_name,
+    business_whatsapp: biosite.business_whatsapp,
     service_name: service?.name,
     staff_name: staff?.name || null,
     customer_name: customerName,

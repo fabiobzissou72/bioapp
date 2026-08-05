@@ -56,14 +56,19 @@ export async function POST(request: Request) {
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
 
   const [{ data: biosite }, { data: service }] = await Promise.all([
-    admin.from("biosites").select("business_name, notification_webhook_url").eq("id", booking.biosite_id).single(),
+    admin
+      .from("biosites")
+      .select("business_name, notification_webhook_url, business_whatsapp")
+      .eq("id", booking.biosite_id)
+      .single(),
     booking.service_id
       ? admin.from("services").select("name").eq("id", booking.service_id).single()
       : Promise.resolve({ data: null }),
   ]);
 
-  notifyWebhook(biosite?.notification_webhook_url, "booking.cancelled", {
+  await notifyWebhook(biosite?.notification_webhook_url, "booking.cancelled", {
     business_name: biosite?.business_name,
+    business_whatsapp: biosite?.business_whatsapp,
     service_name: service?.name,
     customer_name: booking.customer_name,
     customer_phone: booking.customer_phone,

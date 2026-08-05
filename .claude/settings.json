@@ -55,7 +55,12 @@
       "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_cliente_redesign2.py\")",
       "Bash(mkdir -p \"/c/Users/fbzis/Desktop/Bio Insta/src/app/api/leads/analyze\")",
       "Bash(mkdir -p \"/c/Users/fbzis/Desktop/Bio Insta/src/app/superadmin/leads\")",
-      "Bash(mkdir -p \"/c/Users/fbzis/Desktop/Bio Insta/chrome-extension\")"
+      "Bash(mkdir -p \"/c/Users/fbzis/Desktop/Bio Insta/chrome-extension\")",
+      "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_leads_page.py\")",
+      "Bash(curl -s -o /dev/null -w \"status: %{http_code}\\\\ntime: %{time_total}s\\\\n\" -X POST \"https://webhook.fbzia.com.br/webhook/bioinsta\" -H \"Content-Type: application/json\" -d '{\"event\":\"test\",\"message\":\"teste de conectividade\"}' --max-time 10)",
+      "Bash(curl -s \"https://webhook.site/token\" -X POST -H \"Content-Type: application/json\" -d '{}')",
+      "Bash(curl -s -X POST https://minhabioapp.vercel.app/api/bookings -H 'Content-Type: application/json' -d '{ *)",
+      "Bash(curl -s \"https://webhook.site/token/311656e0-09c9-4ad3-97d9-61e765fbae4d/requests\")"
     ],
     "additionalDirectories": [
       "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app\\painel\\(dashboard)",

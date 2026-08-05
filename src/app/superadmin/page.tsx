@@ -22,7 +22,7 @@ export default async function SuperAdminPage() {
   const [{ data: biosites }, { data: profiles }] = await Promise.all([
     supabase
       .from("biosites")
-      .select("id, slug, business_name, owner_id, published, payment_status, admin_notes, created_at")
+      .select("id, slug, business_name, owner_id, published, payment_status, admin_notes, business_whatsapp, created_at")
       .order("created_at", { ascending: false }),
     supabase.from("profiles").select("id, agency_name"),
   ]);

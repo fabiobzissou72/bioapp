@@ -12,6 +12,7 @@ type Row = {
   published: boolean;
   payment_status: string;
   admin_notes: string | null;
+  business_whatsapp: string | null;
   created_at: string;
   agency_name: string;
 };
@@ -26,6 +27,7 @@ function Row({ row }: { row: Row }) {
   const router = useRouter();
   const supabase = createClient();
   const [notes, setNotes] = useState(row.admin_notes || "");
+  const [whatsapp, setWhatsapp] = useState(row.business_whatsapp || "");
 
   async function updateStatus(status: string) {
     await supabase.from("biosites").update({ payment_status: status }).eq("id", row.id);
@@ -34,6 +36,11 @@ function Row({ row }: { row: Row }) {
 
   async function saveNotes() {
     await supabase.from("biosites").update({ admin_notes: notes || null }).eq("id", row.id);
+    router.refresh();
+  }
+
+  async function saveWhatsapp() {
+    await supabase.from("biosites").update({ business_whatsapp: whatsapp || null }).eq("id", row.id);
     router.refresh();
   }
 
@@ -72,6 +79,15 @@ function Row({ row }: { row: Row }) {
           <option value="atrasado">atrasado</option>
         </select>
       </td>
+      <td className="py-2 pr-3">
+        <input
+          value={whatsapp}
+          onChange={(e) => setWhatsapp(e.target.value)}
+          onBlur={saveWhatsapp}
+          placeholder="5511999999999"
+          className="w-32 rounded-lg border border-neutral-200 bg-white px-2 py-1 text-xs"
+        />
+      </td>
       <td className="py-2 pr-3 text-xs text-neutral-400">
         {new Date(row.created_at).toLocaleDateString("pt-BR")}
       </td>
@@ -98,6 +114,7 @@ export function SuperAdminTable({ rows }: { rows: Row[] }) {
             <th className="py-2 pr-3 font-medium">Agência</th>
             <th className="py-2 pr-3 font-medium">Status</th>
             <th className="py-2 pr-3 font-medium">Pagamento</th>
+            <th className="py-2 pr-3 font-medium">WhatsApp da empresa</th>
             <th className="py-2 pr-3 font-medium">Criado em</th>
             <th className="py-2 pr-3 font-medium">Anotação</th>
           </tr>
