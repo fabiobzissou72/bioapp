@@ -19,7 +19,7 @@ function ItemCard({ item, primaryColor, dark }: { item: CatalogItem; primaryColo
       }`}
     >
       {item.media_url && (
-        <div className={`w-full overflow-hidden bg-neutral-100 ${ASPECT_CLASS[item.aspect]}`}>
+        <div className={`relative w-full overflow-hidden bg-neutral-100 ${ASPECT_CLASS[item.aspect]}`}>
           {item.media_type === "video" ? (
             <video
               src={item.media_url}
@@ -36,6 +36,11 @@ function ItemCard({ item, primaryColor, dark }: { item: CatalogItem; primaryColo
               alt={item.title || ""}
               className={`h-full w-full ${item.object_fit === "contain" ? "object-contain" : "object-cover"}`}
             />
+          )}
+          {item.media_type === "video" && (
+            <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full bg-black/60 px-2 py-1 text-xs font-medium text-white">
+              ▶ vídeo
+            </span>
           )}
         </div>
       )}
