@@ -6,9 +6,9 @@ import type { Service, Staff } from "@/lib/types";
 
 type Availability = { id: string; staff_id: string; weekday: number; start_time: string; end_time: string };
 type StaffService = { staff_id: string; service_id: string };
+type OccupiedBlock = { start: number; end: number };
 
 const WEEKDAY_LABELS = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
-const SLOT_MINUTES = 15;
 
 function nextDays(count: number) {
   const days: Date[] = [];
@@ -24,6 +24,14 @@ function nextDays(count: number) {
 function toTimeMinutes(time: string) {
   const [h, m] = time.split(":").map(Number);
   return h * 60 + m;
+}
+
+function minutesToLabel(minutes: number) {
+  const h = Math.floor(minutes / 60)
+    .toString()
+    .padStart(2, "0");
+  const m = (minutes % 60).toString().padStart(2, "0");
+  return `${h}:${m}`;
 }
 
 function formatDateISO(date: Date) {
@@ -54,7 +62,7 @@ export function BookingFlow({
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [notes, setNotes] = useState("");
-  const [bookedTimes, setBookedTimes] = useState<string[]>([]);
+  const [occupied, setOccupied] = useState<OccupiedBlock[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -70,25 +78,27 @@ export function BookingFlow({
 
   const days = useMemo(() => nextDays(14), []);
 
+  const servicesById = useMemo(() => new Map(services.map((s) => [s.id, s])), [services]);
+
+  // Each slot occupies the service's own duration, so a 60min service offers
+  // hourly starts and a 30min service offers half-hourly starts — no overlap.
   const slots = useMemo(() => {
-    if (!date || !activeStaff) return [];
+    if (!date || !activeStaff || !service) return [];
+    const duration = service.duration_minutes;
     const weekday = date.getDay();
     const windows = availability.filter((a) => a.staff_id === activeStaff.id && a.weekday === weekday);
     const result: string[] = [];
     for (const w of windows) {
       let start = toTimeMinutes(w.start_time);
       const end = toTimeMinutes(w.end_time);
-      while (start + SLOT_MINUTES <= end) {
-        const h = Math.floor(start / 60)
-          .toString()
-          .padStart(2, "0");
-        const m = (start % 60).toString().padStart(2, "0");
-        result.push(`${h}:${m}`);
-        start += SLOT_MINUTES;
+      while (start + duration <= end) {
+        const overlaps = occupied.some((block) => start < block.end && start + duration > block.start);
+        if (!overlaps) result.push(minutesToLabel(start));
+        start += duration;
       }
     }
     return result;
-  }, [date, activeStaff, availability]);
+  }, [date, activeStaff, service, availability, occupied]);
 
   async function selectDate(d: Date) {
     setDate(d);
@@ -96,12 +106,17 @@ export function BookingFlow({
     if (!activeStaff) return;
     const { data } = await supabase
       .from("bookings")
-      .select("booking_time")
+      .select("booking_time, service_id")
       .eq("biosite_id", biositeId)
       .eq("staff_id", activeStaff.id)
       .eq("booking_date", formatDateISO(d))
       .neq("status", "cancelled");
-    setBookedTimes((data || []).map((b: { booking_time: string }) => b.booking_time.slice(0, 5)));
+    const blocks = (data || []).map((b: { booking_time: string; service_id: string | null }) => {
+      const start = toTimeMinutes(b.booking_time.slice(0, 5));
+      const bookedDuration = (b.service_id && servicesById.get(b.service_id)?.duration_minutes) || 30;
+      return { start, end: start + bookedDuration };
+    });
+    setOccupied(blocks);
   }
 
   async function confirmBooking() {
@@ -220,24 +235,20 @@ export function BookingFlow({
               {slots.length === 0 && (
                 <p className="col-span-3 text-sm text-neutral-400">Sem horários disponíveis nesse dia.</p>
               )}
-              {slots.map((slot) => {
-                const isBooked = bookedTimes.includes(slot);
-                return (
-                  <button
-                    key={slot}
-                    disabled={isBooked}
-                    onClick={() => setTime(slot)}
-                    style={{
-                      backgroundColor: time === slot ? primaryColor : isBooked ? "#f0f0f0" : "white",
-                      color: time === slot ? "white" : isBooked ? "#bbb" : "#333",
-                      borderColor: time === slot ? primaryColor : "#e5e5e5",
-                    }}
-                    className="rounded-full border px-3 py-2 text-sm"
-                  >
-                    {slot}
-                  </button>
-                );
-              })}
+              {slots.map((slot) => (
+                <button
+                  key={slot}
+                  onClick={() => setTime(slot)}
+                  style={{
+                    backgroundColor: time === slot ? primaryColor : "white",
+                    color: time === slot ? "white" : "#333",
+                    borderColor: time === slot ? primaryColor : "#e5e5e5",
+                  }}
+                  className="rounded-full border px-3 py-2 text-sm"
+                >
+                  {slot}
+                </button>
+              ))}
             </div>
           )}
         </section>
