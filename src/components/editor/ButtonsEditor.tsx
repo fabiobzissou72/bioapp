@@ -67,30 +67,45 @@ export function ButtonsEditor({
   const router = useRouter();
   const supabase = createClient();
   const [adding, setAdding] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [draft, setDraft] = useState<Partial<BiositeButton>>(emptyDraft());
   const [saving, setSaving] = useState(false);
 
-  async function addButton() {
+  function startEdit(button: BiositeButton) {
+    setDraft({ ...button, config: { ...button.config } });
+    setEditingId(button.id);
+    setAdding(true);
+  }
+
+  function resetForm() {
+    setAdding(false);
+    setEditingId(null);
+    setDraft(emptyDraft());
+  }
+
+  async function saveButton() {
     setSaving(true);
     let config = draft.config || {};
     if (draft.type === "address" && config.full_address) {
       const coords = await geocodeAddress(config.full_address);
       if (coords) config = { ...config, address_lat: coords.lat, address_lng: coords.lng };
     }
-    await supabase.from("buttons").insert({
-      biosite_id: biositeId,
+    const payload = {
       type: draft.type,
       label: draft.label || null,
       url: draft.url || null,
       color: draft.color || null,
       style: draft.style,
       pulse: draft.pulse,
-      position: buttons.length,
       config,
-    });
+    };
+    if (editingId) {
+      await supabase.from("buttons").update(payload).eq("id", editingId);
+    } else {
+      await supabase.from("buttons").insert({ ...payload, biosite_id: biositeId, position: buttons.length });
+    }
     setSaving(false);
-    setAdding(false);
-    setDraft(emptyDraft());
+    resetForm();
     router.refresh();
   }
 
@@ -139,6 +154,9 @@ export function ButtonsEditor({
             className="text-neutral-400 disabled:opacity-20"
           >
             ↓
+          </button>
+          <button onClick={() => startEdit(b)} className="text-neutral-600">
+            editar
           </button>
           <button onClick={() => removeButton(b.id)} className="text-red-500">
             excluir
@@ -349,19 +367,13 @@ export function ButtonsEditor({
 
           <div className="flex gap-2">
             <button
-              onClick={addButton}
+              onClick={saveButton}
               disabled={saving}
               className="rounded-full bg-pink-600 px-5 py-2 text-sm font-medium text-white disabled:opacity-40"
             >
-              {saving ? "Salvando..." : "Adicionar"}
+              {saving ? "Salvando..." : editingId ? "Salvar" : "Adicionar"}
             </button>
-            <button
-              onClick={() => {
-                setAdding(false);
-                setDraft(emptyDraft());
-              }}
-              className="rounded-full px-5 py-2 text-sm font-medium text-neutral-500"
-            >
+            <button onClick={resetForm} className="rounded-full px-5 py-2 text-sm font-medium text-neutral-500">
               Cancelar
             </button>
           </div>

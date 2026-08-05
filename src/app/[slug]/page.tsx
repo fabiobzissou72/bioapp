@@ -1,10 +1,45 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { ButtonList } from "@/components/biosite/ButtonList";
 import { CatalogSection } from "@/components/biosite/CatalogSection";
 import type { BiositeButton, CatalogGroup, CatalogItem } from "@/lib/types";
 
 export const revalidate = 0;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const supabase = await createClient();
+  const { data: biosite } = await supabase
+    .from("biosites")
+    .select("business_name, description, seo_title, seo_description, seo_keywords, logo_url")
+    .eq("slug", slug)
+    .eq("published", true)
+    .single();
+
+  if (!biosite) return {};
+
+  const title = biosite.seo_title || biosite.business_name;
+  const description = biosite.seo_description || biosite.description || undefined;
+  const keywords = biosite.seo_keywords
+    ? biosite.seo_keywords.split(",").map((k: string) => k.trim())
+    : undefined;
+
+  return {
+    title,
+    description,
+    keywords,
+    openGraph: {
+      title,
+      description,
+      images: biosite.logo_url ? [biosite.logo_url] : undefined,
+    },
+  };
+}
 
 export default async function BiositePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

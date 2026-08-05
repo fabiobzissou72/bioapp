@@ -13,10 +13,12 @@ export function Sidebar({
   agencyName,
   biositeCount,
   planLimit,
+  isSuperAdmin,
 }: {
   agencyName: string;
   biositeCount: number;
   planLimit: number;
+  isSuperAdmin: boolean;
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -48,6 +50,17 @@ export function Sidebar({
               </Link>
             );
           })}
+          {isSuperAdmin && (
+            <Link
+              href="/superadmin"
+              className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium ${
+                pathname === "/superadmin" ? "bg-purple-50 text-purple-600" : "text-neutral-600 hover:bg-neutral-50"
+              }`}
+            >
+              <span>🛠️</span>
+              Super Admin
+            </Link>
+          )}
         </nav>
       </div>
 

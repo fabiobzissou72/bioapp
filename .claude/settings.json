@@ -35,10 +35,19 @@
       "Bash(rm \"/c/Users/fbzis/Desktop/Bio Insta/src/app/painel/page.tsx\")",
       "Bash(rm -rf \"/c/Users/fbzis/Desktop/Bio Insta/src/app/painel/perfil\")",
       "Bash(rm \"/c/Users/fbzis/Desktop/Bio Insta/src/components/dashboard/DashboardHeader.tsx\")",
-      "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_prod.py\")"
+      "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_prod.py\")",
+      "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_dark_mode.py\")",
+      "Bash(python \"C:\\\\Users\\\\fbzis\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-fbzis-Desktop-Bio-Insta\\\\2ba6f97d-ce90-438e-82be-d25d5848b9cf\\\\scratchpad\\\\test_dark_mode2.py\")",
+      "Bash(grep -n \"addButton\\\\|Cancelar\\\\|Adicionar$\\\\|Salvando\" \"c:\\\\Users\\\\fbzis\\\\Desktop\\\\Bio Insta\\\\src\\\\components\\\\editor\\\\ButtonsEditor.tsx\")",
+      "Bash(mkdir -p \"/c/Users/fbzis/Desktop/Bio Insta/src/app/api/client-access\")",
+      "Bash(mkdir -p \"/c/Users/fbzis/Desktop/Bio Insta/src/app/cliente/login\")",
+      "Bash(mkdir -p \"/c/Users/fbzis/Desktop/Bio Insta/src/app/superadmin\")"
     ],
     "additionalDirectories": [
-      "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app\\painel\\(dashboard)"
+      "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app\\painel\\(dashboard)",
+      "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app\\api",
+      "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app\\cliente",
+      "C:\\Users\\fbzis\\Desktop\\Bio Insta\\src\\app"
     ]
   }
 }

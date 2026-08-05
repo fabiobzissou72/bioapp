@@ -8,6 +8,8 @@ import { ServicesEditor } from "@/components/editor/ServicesEditor";
 import { StaffEditor } from "@/components/editor/StaffEditor";
 import { CatalogEditor } from "@/components/editor/CatalogEditor";
 import { QrCodeButton } from "@/components/editor/QrCodeButton";
+import { SeoEditor } from "@/components/editor/SeoEditor";
+import { ClientAccessEditor } from "@/components/editor/ClientAccessEditor";
 import type { BiositeButton, CatalogGroup, CatalogItem, Service, Staff } from "@/lib/types";
 
 export const revalidate = 0;
@@ -38,6 +40,11 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
         supabase.from("availability_overrides").select("*").in("staff_id", staffIds),
       ])
     : [{ data: [] }, { data: [] }];
+
+  const { data: clientAccesses } = await supabase
+    .from("client_access")
+    .select("email")
+    .eq("biosite_id", id);
 
   const { data: catalogGroups } = await supabase
     .from("catalog_groups")
@@ -85,6 +92,11 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
       <BiositeInfoForm biosite={biosite} />
 
       <section className="mt-8">
+        <h2 className="mb-3 text-lg font-semibold text-neutral-900">SEO (Google)</h2>
+        <SeoEditor biosite={biosite} />
+      </section>
+
+      <section className="mt-8">
         <h2 className="mb-3 text-lg font-semibold text-neutral-900">Botões</h2>
         <ButtonsEditor biositeId={id} buttons={(buttons || []) as BiositeButton[]} slug={biosite.slug} />
       </section>
@@ -114,6 +126,11 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
           availability={availability || []}
           overrides={overrides || []}
         />
+      </section>
+
+      <section className="mt-8">
+        <h2 className="mb-3 text-lg font-semibold text-neutral-900">Acesso do cliente</h2>
+        <ClientAccessEditor biositeId={id} accesses={clientAccesses || []} />
       </section>
     </main>
   );

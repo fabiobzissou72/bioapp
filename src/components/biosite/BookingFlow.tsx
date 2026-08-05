@@ -197,9 +197,11 @@ export function BookingFlow({
         </div>
       </section>
 
-      {service && eligibleStaff.length > 1 && (
+      {service && eligibleStaff.length >= 1 && (
         <section>
-          <h2 className="mb-2 text-sm font-semibold text-neutral-700">Escolha o profissional</h2>
+          <h2 className="mb-2 text-sm font-semibold text-neutral-700">
+            {eligibleStaff.length > 1 ? "Escolha o profissional" : "Profissional"}
+          </h2>
           <div className="flex flex-wrap gap-2">
             {eligibleStaff.map((s) => (
               <button

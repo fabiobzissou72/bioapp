@@ -38,6 +38,9 @@ export type Biosite = {
   primary_color: string;
   button_text_color: string | null;
   theme: "light" | "dark";
+  seo_title: string | null;
+  seo_description: string | null;
+  seo_keywords: string | null;
   published: boolean;
   created_at: string;
   updated_at: string;

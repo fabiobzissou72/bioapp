@@ -32,6 +32,7 @@ function StaffRow({
 }) {
   const router = useRouter();
   const supabase = createClient();
+  const [staffName, setStaffName] = useState(member.name);
   const [weekday, setWeekday] = useState("1");
   const [start, setStart] = useState("09:00");
   const [end, setEnd] = useState("18:00");
@@ -82,10 +83,20 @@ function StaffRow({
     router.refresh();
   }
 
+  async function saveName() {
+    await supabase.from("staff").update({ name: staffName }).eq("id", member.id);
+    router.refresh();
+  }
+
   return (
     <div className="flex flex-col gap-3 rounded-lg border border-neutral-200 bg-white text-neutral-900 p-3">
-      <div className="flex items-center justify-between">
-        <span className="font-medium text-neutral-900">{member.name}</span>
+      <div className="flex items-center justify-between gap-2">
+        <input
+          value={staffName}
+          onChange={(e) => setStaffName(e.target.value)}
+          onBlur={saveName}
+          className="flex-1 rounded-lg border border-neutral-200 bg-white px-2 py-1 text-sm font-medium"
+        />
         <button onClick={removeStaff} className="text-sm text-red-500">
           excluir
         </button>
