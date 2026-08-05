@@ -89,7 +89,7 @@ export function AgencyProfileForm({
           className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none"
         />
         <span className="text-xs text-neutral-400">
-          Pra onde vai quem clicar em &quot;feito por {name || "sua agência"}&quot; — normalmente o link do seu
+          Pra onde vai quem clicar em &quot;desenvolvido por {name || "sua agência"}&quot; — normalmente o link do seu
           WhatsApp, pra gerar leads de quem viu o biosite.
         </span>
       </label>

@@ -120,7 +120,7 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
         <img
           src={biosite.logo_url}
           alt={biosite.business_name}
-          className={`h-24 w-24 object-cover ${
+          className={`h-28 w-28 object-cover ${
             biosite.logo_transparent ? "" : "border-4 border-white shadow-lg"
           } ${biosite.logo_shape === "round" ? "rounded-full" : "rounded-2xl"} ${
             biosite.cover_url ? "-mt-16" : ""
@@ -176,7 +176,7 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
             // eslint-disable-next-line @next/next/no-img-element
             <img src={profile.agency_logo_url} alt="" className="h-4 w-4 rounded-full" />
           )}
-          feito por {profile.agency_name}
+          desenvolvido por {profile.agency_name}
         </a>
       )}
     </main>
