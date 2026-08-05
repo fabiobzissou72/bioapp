@@ -5,7 +5,8 @@ import { BiositeInfoForm } from "@/components/editor/BiositeInfoForm";
 import { ButtonsEditor } from "@/components/editor/ButtonsEditor";
 import { ServicesEditor } from "@/components/editor/ServicesEditor";
 import { StaffEditor } from "@/components/editor/StaffEditor";
-import type { BiositeButton, Service, Staff } from "@/lib/types";
+import { CatalogEditor } from "@/components/editor/CatalogEditor";
+import type { BiositeButton, CatalogGroup, CatalogItem, Service, Staff } from "@/lib/types";
 
 export const revalidate = 0;
 
@@ -33,6 +34,22 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
     ? await supabase.from("availability").select("*").in("staff_id", staffIds)
     : { data: [] };
 
+  const { data: catalogGroups } = await supabase
+    .from("catalog_groups")
+    .select("*")
+    .eq("biosite_id", id)
+    .order("position");
+
+  const groupIds = (catalogGroups || []).map((g: CatalogGroup) => g.id);
+  const { data: catalogItems } = groupIds.length
+    ? await supabase.from("catalog_items").select("*").in("group_id", groupIds).order("position")
+    : { data: [] as CatalogItem[] };
+
+  const itemsByGroup: Record<string, CatalogItem[]> = {};
+  for (const item of catalogItems || []) {
+    (itemsByGroup[item.group_id] ||= []).push(item);
+  }
+
   return (
     <main className="mx-auto min-h-screen w-full max-w-2xl px-4 pb-16 pt-6">
       <div className="mb-4 flex items-center justify-between">
@@ -54,6 +71,16 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
       <section className="mt-8">
         <h2 className="mb-3 text-lg font-semibold text-neutral-900">Botões</h2>
         <ButtonsEditor biositeId={id} buttons={(buttons || []) as BiositeButton[]} slug={biosite.slug} />
+      </section>
+
+      <section className="mt-8">
+        <h2 className="mb-3 text-lg font-semibold text-neutral-900">Catálogo (Nossos serviços)</h2>
+        <CatalogEditor
+          biositeId={id}
+          ownerId={biosite.owner_id}
+          groups={(catalogGroups || []) as CatalogGroup[]}
+          itemsByGroup={itemsByGroup}
+        />
       </section>
 
       <section className="mt-8">

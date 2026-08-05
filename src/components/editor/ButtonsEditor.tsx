@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { geocodeAddress } from "@/lib/geocode";
 import type { BiositeButton, ButtonConfig, ButtonType } from "@/lib/types";
 
 const TYPE_LABELS: Record<ButtonType, string> = {
@@ -14,7 +15,41 @@ const TYPE_LABELS: Record<ButtonType, string> = {
   address: "Endereço",
   booking: "Agendamento",
   custom: "Link personalizado",
+  facebook: "Facebook",
+  tiktok: "TikTok",
+  youtube: "YouTube",
+  x_twitter: "X / Twitter",
+  linkedin: "LinkedIn",
+  threads: "Threads",
+  telegram: "Telegram",
+  pinterest: "Pinterest",
+  snapchat: "Snapchat",
+  twitch: "Twitch",
+  spotify: "Spotify",
+  site: "Site",
+  phone: "Ligar",
+  email: "E-mail",
+  quote: "Pedir orçamento",
 };
+
+// Types that just need a URL (no special config), rendered with a generic URL input.
+const SIMPLE_URL_TYPES: ButtonType[] = [
+  "instagram",
+  "google_review",
+  "custom",
+  "facebook",
+  "tiktok",
+  "youtube",
+  "x_twitter",
+  "linkedin",
+  "threads",
+  "telegram",
+  "pinterest",
+  "snapchat",
+  "twitch",
+  "spotify",
+  "site",
+];
 
 function emptyDraft(): Partial<BiositeButton> {
   return { type: "custom", label: "", url: "", color: "", style: "full", pulse: false, config: {} };
@@ -37,6 +72,11 @@ export function ButtonsEditor({
 
   async function addButton() {
     setSaving(true);
+    let config = draft.config || {};
+    if (draft.type === "address" && config.full_address) {
+      const coords = await geocodeAddress(config.full_address);
+      if (coords) config = { ...config, address_lat: coords.lat, address_lng: coords.lng };
+    }
     await supabase.from("buttons").insert({
       biosite_id: biositeId,
       type: draft.type,
@@ -46,7 +86,7 @@ export function ButtonsEditor({
       style: draft.style,
       pulse: draft.pulse,
       position: buttons.length,
-      config: draft.config || {},
+      config,
     });
     setSaving(false);
     setAdding(false);
@@ -141,13 +181,48 @@ export function ButtonsEditor({
             className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
           />
 
-          {(draft.type === "instagram" || draft.type === "google_review" || draft.type === "custom") && (
+          {draft.type && SIMPLE_URL_TYPES.includes(draft.type) && (
             <input
               value={draft.url || ""}
               onChange={(e) => setDraft((d) => ({ ...d, url: e.target.value }))}
               placeholder="URL"
               className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
             />
+          )}
+
+          {draft.type === "phone" && (
+            <input
+              value={draft.url || ""}
+              onChange={(e) => setDraft((d) => ({ ...d, url: e.target.value }))}
+              placeholder="Telefone (com DDD, ex: 11999999999)"
+              className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
+            />
+          )}
+
+          {draft.type === "email" && (
+            <input
+              value={draft.url || ""}
+              onChange={(e) => setDraft((d) => ({ ...d, url: e.target.value }))}
+              placeholder="E-mail"
+              className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
+            />
+          )}
+
+          {draft.type === "quote" && (
+            <>
+              <input
+                value={draft.url || ""}
+                onChange={(e) => setDraft((d) => ({ ...d, url: e.target.value }))}
+                placeholder="Telefone do WhatsApp (com DDD e país, ex: 5511999999999)"
+                className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
+              />
+              <input
+                value={draft.config?.message || ""}
+                onChange={(e) => updateConfig({ message: e.target.value })}
+                placeholder="Mensagem inicial (ex: Olá, gostaria de um orçamento)"
+                className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
+              />
+            </>
           )}
 
           {draft.type === "whatsapp" && (
@@ -220,12 +295,30 @@ export function ButtonsEditor({
           )}
 
           {draft.type === "address" && (
-            <input
-              value={draft.config?.full_address || ""}
-              onChange={(e) => updateConfig({ full_address: e.target.value })}
-              placeholder="Endereço completo"
-              className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
-            />
+            <>
+              <textarea
+                value={draft.config?.full_address || ""}
+                onChange={(e) => updateConfig({ full_address: e.target.value })}
+                placeholder="Endereço completo (rua, número, cidade, estado)"
+                className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
+              />
+              <div className="flex items-center gap-4 text-sm text-neutral-600">
+                Cor de fundo do bloco
+                <input
+                  type="color"
+                  value={draft.config?.address_block_bg || "#ffffff"}
+                  onChange={(e) => updateConfig({ address_block_bg: e.target.value })}
+                  className="h-7 w-10 rounded border border-neutral-200"
+                />
+                Cor do texto
+                <input
+                  type="color"
+                  value={draft.config?.address_block_text || "#111111"}
+                  onChange={(e) => updateConfig({ address_block_text: e.target.value })}
+                  className="h-7 w-10 rounded border border-neutral-200"
+                />
+              </div>
+            </>
           )}
 
           {draft.type === "booking" && (

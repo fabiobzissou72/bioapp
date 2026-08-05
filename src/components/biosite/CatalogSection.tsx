@@ -17,10 +17,21 @@ function ItemCard({ item, primaryColor }: { item: CatalogItem; primaryColor: str
       {item.media_url && (
         <div className={`w-full overflow-hidden bg-neutral-100 ${ASPECT_CLASS[item.aspect]}`}>
           {item.media_type === "video" ? (
-            <video src={item.media_url} className="h-full w-full object-cover" muted loop playsInline autoPlay />
+            <video
+              src={item.media_url}
+              className={`h-full w-full ${item.object_fit === "contain" ? "object-contain" : "object-cover"}`}
+              muted
+              loop
+              playsInline
+              autoPlay
+            />
           ) : (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={item.media_url} alt={item.title || ""} className="h-full w-full object-cover" />
+            <img
+              src={item.media_url}
+              alt={item.title || ""}
+              className={`h-full w-full ${item.object_fit === "contain" ? "object-contain" : "object-cover"}`}
+            />
           )}
         </div>
       )}
@@ -96,6 +107,7 @@ export function CatalogSection({
   return (
     <div className="flex w-full flex-col gap-4">
       {groups.map((group) => {
+        if (!group.enabled) return null;
         const items = itemsByGroup[group.id] || [];
         if (items.length === 0) return null;
 

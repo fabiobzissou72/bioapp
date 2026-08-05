@@ -6,7 +6,22 @@ export type ButtonType =
   | "wifi"
   | "address"
   | "booking"
-  | "custom";
+  | "custom"
+  | "facebook"
+  | "tiktok"
+  | "youtube"
+  | "x_twitter"
+  | "linkedin"
+  | "threads"
+  | "telegram"
+  | "pinterest"
+  | "snapchat"
+  | "twitch"
+  | "spotify"
+  | "site"
+  | "phone"
+  | "email"
+  | "quote";
 
 export type Biosite = {
   id: string;
@@ -34,6 +49,10 @@ export type ButtonConfig = {
   wifi_ssid?: string;
   wifi_password?: string;
   full_address?: string;
+  address_lat?: number;
+  address_lng?: number;
+  address_block_bg?: string;
+  address_block_text?: string;
 };
 
 export type BiositeButton = {
@@ -52,6 +71,8 @@ export type BiositeButton = {
 export type CatalogGroup = {
   id: string;
   biosite_id: string;
+  name: string;
+  enabled: boolean;
   layout: "stacked" | "carousel";
   interval_seconds: number;
   position: number;
@@ -63,6 +84,7 @@ export type CatalogItem = {
   media_type: "image" | "video";
   media_url: string | null;
   aspect: "square" | "horizontal" | "vertical" | "original";
+  object_fit: "cover" | "contain";
   title: string | null;
   description: string | null;
   cta_label: string | null;

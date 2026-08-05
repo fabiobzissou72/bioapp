@@ -5,6 +5,7 @@ import { getContrastTextColor } from "@/lib/color";
 import type { BiositeButton } from "@/lib/types";
 import { PixButton } from "./PixButton";
 import { WifiButton } from "./WifiButton";
+import { AddressBlock } from "./AddressBlock";
 
 const ICONS: Record<string, string> = {
   instagram: "📷",
@@ -13,6 +14,21 @@ const ICONS: Record<string, string> = {
   address: "📍",
   booking: "📅",
   custom: "🔗",
+  facebook: "📘",
+  tiktok: "🎵",
+  youtube: "▶️",
+  x_twitter: "✖️",
+  linkedin: "💼",
+  threads: "🧵",
+  telegram: "✈️",
+  pinterest: "📌",
+  snapchat: "👻",
+  twitch: "🎮",
+  spotify: "🎧",
+  site: "🌐",
+  phone: "📞",
+  email: "✉️",
+  quote: "💬",
 };
 
 const LABELS: Record<string, string> = {
@@ -22,18 +38,34 @@ const LABELS: Record<string, string> = {
   address: "Como chegar",
   booking: "Agende aqui",
   custom: "Link",
+  facebook: "Facebook",
+  tiktok: "TikTok",
+  youtube: "YouTube",
+  x_twitter: "X / Twitter",
+  linkedin: "LinkedIn",
+  threads: "Threads",
+  telegram: "Telegram",
+  pinterest: "Pinterest",
+  snapchat: "Snapchat",
+  twitch: "Twitch",
+  spotify: "Spotify",
+  site: "Site",
+  phone: "Ligar",
+  email: "E-mail",
+  quote: "Pedir orçamento",
 };
 
 function resolveHref(button: BiositeButton, slug: string) {
-  if (button.type === "whatsapp" && button.url) {
+  if ((button.type === "whatsapp" || button.type === "quote") && button.url) {
     const digits = button.url.replace(/\D/g, "");
     const msg = button.config.message ? `?text=${encodeURIComponent(button.config.message)}` : "";
     return `https://wa.me/${digits}${msg}`;
   }
-  if (button.type === "address" && button.config.full_address) {
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-      button.config.full_address
-    )}`;
+  if (button.type === "phone" && button.url) {
+    return `tel:${button.url.replace(/\D/g, "")}`;
+  }
+  if (button.type === "email" && button.url) {
+    return `mailto:${button.url}`;
   }
   if (button.type === "booking") {
     return `/${slug}/agendar`;
@@ -86,6 +118,10 @@ export function ButtonList({
 
         if (button.type === "wifi") {
           return <WifiButton key={button.id} button={button} style={style} />;
+        }
+
+        if (button.type === "address") {
+          return <AddressBlock key={button.id} button={button} />;
         }
 
         const href = resolveHref(button, slug);
