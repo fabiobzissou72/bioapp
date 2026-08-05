@@ -14,6 +14,23 @@ function sanitize(value: string, maxLength: number) {
     .toUpperCase();
 }
 
+export type PixKeyType = "cpf" | "cnpj" | "email" | "phone" | "random";
+
+// The Central Bank's Pix key registry (DICT) expects a specific format per key
+// type — a raw phone number without the "+55" country code won't resolve and
+// the receiving bank app rejects the whole payload as invalid.
+export function formatPixKey(key: string, type: PixKeyType | undefined) {
+  const trimmed = key.trim();
+  if (type === "cpf" || type === "cnpj") return trimmed.replace(/\D/g, "");
+  if (type === "phone") {
+    const digits = trimmed.replace(/\D/g, "");
+    const withCountryCode = digits.startsWith("55") ? digits : `55${digits}`;
+    return `+${withCountryCode}`;
+  }
+  if (type === "email") return trimmed.toLowerCase();
+  return trimmed;
+}
+
 function crc16(payload: string) {
   let crc = 0xffff;
   for (let i = 0; i < payload.length; i++) {

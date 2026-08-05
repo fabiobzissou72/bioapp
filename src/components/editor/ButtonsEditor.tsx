@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import type { BiositeButton, ButtonType } from "@/lib/types";
+import type { BiositeButton, ButtonConfig, ButtonType } from "@/lib/types";
 
 const TYPE_LABELS: Record<ButtonType, string> = {
   instagram: "Instagram",
@@ -117,7 +117,14 @@ export function ButtonsEditor({
         <div className="mt-1 flex flex-col gap-2 rounded-lg border border-neutral-200 bg-white text-neutral-900 p-3">
           <select
             value={draft.type}
-            onChange={(e) => setDraft((d) => ({ ...d, type: e.target.value as ButtonType, config: {} }))}
+            onChange={(e) => {
+              const nextType = e.target.value as ButtonType;
+              setDraft((d) => ({
+                ...d,
+                type: nextType,
+                config: nextType === "pix" ? { pix_key_type: "cpf" } : {},
+              }));
+            }}
             className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
           >
             {Object.entries(TYPE_LABELS).map(([value, label]) => (
@@ -162,10 +169,28 @@ export function ButtonsEditor({
 
           {draft.type === "pix" && (
             <>
+              <select
+                value={draft.config?.pix_key_type || "cpf"}
+                onChange={(e) =>
+                  setDraft((d) => ({
+                    ...d,
+                    config: { ...d.config, pix_key_type: e.target.value as ButtonConfig["pix_key_type"] },
+                  }))
+                }
+                className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
+              >
+                <option value="cpf">CPF</option>
+                <option value="cnpj">CNPJ</option>
+                <option value="email">E-mail</option>
+                <option value="phone">Telefone</option>
+                <option value="random">Chave aleatória</option>
+              </select>
               <input
                 value={draft.config?.pix_key || ""}
                 onChange={(e) => updateConfig({ pix_key: e.target.value })}
-                placeholder="Chave Pix"
+                placeholder={
+                  draft.config?.pix_key_type === "phone" ? "Telefone com DDD, ex: 11999999999" : "Chave Pix"
+                }
                 className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm"
               />
               <input

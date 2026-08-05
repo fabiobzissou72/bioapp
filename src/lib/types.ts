@@ -28,7 +28,7 @@ export type Biosite = {
 export type ButtonConfig = {
   message?: string; // whatsapp initial message
   pix_key?: string;
-  pix_key_type?: string;
+  pix_key_type?: "cpf" | "cnpj" | "email" | "phone" | "random";
   pix_merchant_city?: string;
   wifi_ssid?: string;
   wifi_password?: string;

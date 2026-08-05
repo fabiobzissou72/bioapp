@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import QRCode from "qrcode";
-import { buildPixPayload } from "@/lib/pix";
+import { buildPixPayload, formatPixKey } from "@/lib/pix";
 import type { BiositeButton } from "@/lib/types";
 
 export function PixButton({
@@ -26,7 +26,7 @@ export function PixButton({
     if (!button.config.pix_key || !value || value <= 0) return;
 
     const payload = buildPixPayload({
-      pixKey: button.config.pix_key,
+      pixKey: formatPixKey(button.config.pix_key, button.config.pix_key_type),
       amount: value,
       merchantName,
       merchantCity: button.config.pix_merchant_city || "BRASIL",
