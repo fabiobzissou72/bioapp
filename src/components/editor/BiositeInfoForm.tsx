@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { uploadMedia } from "@/lib/upload";
+import { getContrastTextColor } from "@/lib/color";
 import type { Biosite } from "@/lib/types";
 
 export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
@@ -12,6 +13,8 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
   const [name, setName] = useState(biosite.business_name);
   const [description, setDescription] = useState(biosite.description || "");
   const [color, setColor] = useState(biosite.primary_color);
+  const [buttonTextColor, setButtonTextColor] = useState(biosite.button_text_color);
+  const [logoShape, setLogoShape] = useState(biosite.logo_shape);
   const [published, setPublished] = useState(biosite.published);
   const [logoUrl, setLogoUrl] = useState(biosite.logo_url);
   const [coverUrl, setCoverUrl] = useState(biosite.cover_url);
@@ -54,6 +57,8 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
         business_name: name,
         description,
         primary_color: color,
+        button_text_color: buttonTextColor || null,
+        logo_shape: logoShape,
         published,
         updated_at: new Date().toISOString(),
       })
@@ -67,7 +72,9 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
       <div className="flex items-center gap-4">
         <button
           onClick={() => logoInput.current?.click()}
-          className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full border border-dashed border-neutral-300 bg-neutral-50 text-xs text-neutral-400"
+          className={`flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden border border-dashed border-neutral-300 bg-neutral-50 text-xs text-neutral-400 ${
+            logoShape === "round" ? "rounded-full" : "rounded-lg"
+          }`}
         >
           {logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -106,6 +113,30 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
         />
       </div>
 
+      <div className="flex items-center gap-2 text-sm">
+        <span className="text-neutral-600">Formato da logo</span>
+        <button
+          onClick={() => setLogoShape("square")}
+          className="rounded-full border px-3 py-1 text-xs"
+          style={{
+            borderColor: logoShape === "square" ? color : "#e5e5e5",
+            backgroundColor: logoShape === "square" ? `${color}14` : "white",
+          }}
+        >
+          Quadrada
+        </button>
+        <button
+          onClick={() => setLogoShape("round")}
+          className="rounded-full border px-3 py-1 text-xs"
+          style={{
+            borderColor: logoShape === "round" ? color : "#e5e5e5",
+            backgroundColor: logoShape === "round" ? `${color}14` : "white",
+          }}
+        >
+          Redonda
+        </button>
+      </div>
+
       <input
         value={name}
         onChange={(e) => setName(e.target.value)}
@@ -127,6 +158,21 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
           onChange={(e) => setColor(e.target.value)}
           className="h-8 w-12 rounded border border-neutral-200"
         />
+      </div>
+
+      <div className="flex items-center gap-3">
+        <label className="text-sm text-neutral-600">Cor do texto dos botões</label>
+        <input
+          type="color"
+          value={buttonTextColor || getContrastTextColor(color)}
+          onChange={(e) => setButtonTextColor(e.target.value)}
+          className="h-8 w-12 rounded border border-neutral-200"
+        />
+        {buttonTextColor && (
+          <button onClick={() => setButtonTextColor(null)} className="text-xs text-neutral-400 underline">
+            usar automático
+          </button>
+        )}
       </div>
 
       <label className="flex items-center gap-2 text-sm text-neutral-600">

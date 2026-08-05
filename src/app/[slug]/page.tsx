@@ -92,6 +92,7 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
         buttons={(buttons || []) as BiositeButton[]}
         merchantName={biosite.business_name}
         primaryColor={biosite.primary_color}
+        buttonTextColor={biosite.button_text_color}
       />
 
       <CatalogSection

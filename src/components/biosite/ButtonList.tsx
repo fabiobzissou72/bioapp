@@ -47,12 +47,14 @@ export function ButtonList({
   buttons,
   merchantName,
   primaryColor,
+  buttonTextColor,
 }: {
   biositeId: string;
   slug: string;
   buttons: BiositeButton[];
   merchantName: string;
   primaryColor: string;
+  buttonTextColor: string | null;
 }) {
   const supabase = createClient();
 
@@ -74,7 +76,7 @@ export function ButtonList({
         const backgroundColor = button.color || primaryColor;
         const style: React.CSSProperties = {
           backgroundColor,
-          color: getContrastTextColor(backgroundColor),
+          color: buttonTextColor || getContrastTextColor(backgroundColor),
           animation: button.pulse ? "pulse 2s infinite" : undefined,
         };
 

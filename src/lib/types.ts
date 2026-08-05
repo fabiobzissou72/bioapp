@@ -20,6 +20,7 @@ export type Biosite = {
   cover_type: "image" | "video" | null;
   cover_url: string | null;
   primary_color: string;
+  button_text_color: string | null;
   published: boolean;
   created_at: string;
   updated_at: string;
