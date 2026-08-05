@@ -89,6 +89,7 @@ export type CatalogItem = {
   group_id: string;
   media_type: "image" | "video";
   media_url: string | null;
+  item_type: "product" | "service";
   aspect: "square" | "horizontal" | "vertical" | "original";
   object_fit: "cover" | "contain";
   title: string | null;

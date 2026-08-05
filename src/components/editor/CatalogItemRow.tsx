@@ -50,7 +50,7 @@ export function CatalogItemRow({
     router.refresh();
   }
 
-  async function updateField(field: "aspect" | "object_fit", value: string) {
+  async function updateField(field: "aspect" | "object_fit" | "item_type", value: string) {
     await supabase.from("catalog_items").update({ [field]: value }).eq("id", item.id);
     router.refresh();
   }
@@ -130,6 +130,14 @@ export function CatalogItemRow({
           />
         </div>
         <div className="flex flex-wrap gap-2 text-xs">
+          <select
+            defaultValue={item.item_type}
+            onChange={(e) => updateField("item_type", e.target.value)}
+            className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-2 py-1"
+          >
+            <option value="product">Produto</option>
+            <option value="service">Serviço</option>
+          </select>
           <select
             defaultValue={item.aspect}
             onChange={(e) => updateField("aspect", e.target.value)}

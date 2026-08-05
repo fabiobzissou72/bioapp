@@ -42,6 +42,12 @@ function ItemCard({ item, primaryColor, dark }: { item: CatalogItem; primaryColo
               ▶ vídeo
             </span>
           )}
+          <span
+            className="absolute left-2 top-2 rounded-full px-2 py-1 text-xs font-medium"
+            style={{ backgroundColor: primaryColor, color: getContrastTextColor(primaryColor) }}
+          >
+            {item.item_type === "service" ? "Serviço" : "Produto"}
+          </span>
         </div>
       )}
       <div className="p-4" style={{ textAlign: item.cta_align }}>
