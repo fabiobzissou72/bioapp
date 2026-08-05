@@ -30,9 +30,12 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
     ]);
 
   const staffIds = (staff || []).map((s: Staff) => s.id);
-  const { data: availability } = staffIds.length
-    ? await supabase.from("availability").select("*").in("staff_id", staffIds)
-    : { data: [] };
+  const [{ data: availability }, { data: overrides }] = staffIds.length
+    ? await Promise.all([
+        supabase.from("availability").select("*").in("staff_id", staffIds),
+        supabase.from("availability_overrides").select("*").in("staff_id", staffIds),
+      ])
+    : [{ data: [] }, { data: [] }];
 
   const { data: catalogGroups } = await supabase
     .from("catalog_groups")
@@ -96,6 +99,7 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
           services={(services || []) as Service[]}
           staffServices={staffServices || []}
           availability={availability || []}
+          overrides={overrides || []}
         />
       </section>
     </main>

@@ -2,24 +2,12 @@
 
 import { useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { MonthCalendar } from "@/components/ui/MonthCalendar";
 import type { Service, Staff } from "@/lib/types";
 
 type Availability = { id: string; staff_id: string; weekday: number; start_time: string; end_time: string };
 type StaffService = { staff_id: string; service_id: string };
 type OccupiedBlock = { start: number; end: number };
-
-const WEEKDAY_LABELS = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
-
-function nextDays(count: number) {
-  const days: Date[] = [];
-  const today = new Date();
-  for (let i = 0; i < count; i++) {
-    const d = new Date(today);
-    d.setDate(today.getDate() + i);
-    days.push(d);
-  }
-  return days;
-}
 
 function toTimeMinutes(time: string) {
   const [h, m] = time.split(":").map(Number);
@@ -76,8 +64,6 @@ export function BookingFlow({
 
   const activeStaff = manualStaff ?? (eligibleStaff.length === 1 ? eligibleStaff[0] : null);
 
-  const days = useMemo(() => nextDays(14), []);
-
   const servicesById = useMemo(() => new Map(services.map((s) => [s.id, s])), [services]);
 
   // Each slot occupies the service's own duration, so a 60min service offers
@@ -104,19 +90,32 @@ export function BookingFlow({
     setDate(d);
     setTime(null);
     if (!activeStaff) return;
-    const { data } = await supabase
-      .from("bookings")
-      .select("booking_time, service_id")
-      .eq("biosite_id", biositeId)
-      .eq("staff_id", activeStaff.id)
-      .eq("booking_date", formatDateISO(d))
-      .neq("status", "cancelled");
-    const blocks = (data || []).map((b: { booking_time: string; service_id: string | null }) => {
+    const dateISO = formatDateISO(d);
+    const [{ data: bookings }, { data: overrides }] = await Promise.all([
+      supabase
+        .from("bookings")
+        .select("booking_time, service_id")
+        .eq("biosite_id", biositeId)
+        .eq("staff_id", activeStaff.id)
+        .eq("booking_date", dateISO)
+        .neq("status", "cancelled"),
+      supabase
+        .from("availability_overrides")
+        .select("blocked_hours, full_day_blocked")
+        .eq("staff_id", activeStaff.id)
+        .eq("date", dateISO)
+        .maybeSingle(),
+    ]);
+    const bookingBlocks = (bookings || []).map((b: { booking_time: string; service_id: string | null }) => {
       const start = toTimeMinutes(b.booking_time.slice(0, 5));
       const bookedDuration = (b.service_id && servicesById.get(b.service_id)?.duration_minutes) || 30;
       return { start, end: start + bookedDuration };
     });
-    setOccupied(blocks);
+    const blockedHourBlocks = (overrides?.blocked_hours || []).map((hour: number) => ({
+      start: hour * 60,
+      end: hour * 60 + 60,
+    }));
+    setOccupied([...bookingBlocks, ...blockedHourBlocks]);
   }
 
   async function confirmBooking() {
@@ -212,22 +211,8 @@ export function BookingFlow({
       {service && activeStaff && (
         <section>
           <h2 className="mb-2 text-sm font-semibold text-neutral-700">Escolha o horário</h2>
-          <div className="mb-3 flex gap-2 overflow-x-auto pb-1">
-            {days.map((d) => (
-              <button
-                key={d.toISOString()}
-                onClick={() => selectDate(d)}
-                className="flex min-w-14 flex-col items-center rounded-xl border px-2 py-2 text-xs"
-                style={{
-                  borderColor: date && formatDateISO(date) === formatDateISO(d) ? primaryColor : "#e5e5e5",
-                  backgroundColor:
-                    date && formatDateISO(date) === formatDateISO(d) ? `${primaryColor}14` : "white",
-                }}
-              >
-                <span className="text-neutral-500">{WEEKDAY_LABELS[d.getDay()]}</span>
-                <span className="font-semibold text-neutral-900">{d.getDate()}</span>
-              </button>
-            ))}
+          <div className="mb-3">
+            <MonthCalendar selectedDate={date} onSelect={selectDate} primaryColor={primaryColor} />
           </div>
 
           {date && (

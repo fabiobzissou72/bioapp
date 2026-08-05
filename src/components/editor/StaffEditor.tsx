@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { AvailabilityOverridesEditor } from "./AvailabilityOverridesEditor";
 import type { Service, Staff } from "@/lib/types";
 
 type Availability = { id: string; staff_id: string; weekday: number; start_time: string; end_time: string };
 type StaffService = { staff_id: string; service_id: string };
+type Override = { id: string; staff_id: string; date: string; blocked_hours: number[]; full_day_blocked: boolean };
 
 const WEEKDAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
@@ -15,17 +17,20 @@ function StaffRow({
   services,
   assignedServiceIds,
   availability,
+  overrides,
 }: {
   member: Staff;
   services: Service[];
   assignedServiceIds: Set<string>;
   availability: Availability[];
+  overrides: Override[];
 }) {
   const router = useRouter();
   const supabase = createClient();
   const [weekday, setWeekday] = useState("1");
   const [start, setStart] = useState("09:00");
   const [end, setEnd] = useState("18:00");
+  const [showOverrides, setShowOverrides] = useState(false);
 
   async function toggleService(serviceId: string, checked: boolean) {
     if (checked) {
@@ -129,6 +134,14 @@ function StaffRow({
           + horário
         </button>
       </div>
+
+      <button
+        onClick={() => setShowOverrides((o) => !o)}
+        className="self-start text-xs font-medium text-purple-600"
+      >
+        {showOverrides ? "Ocultar ajustes por data" : "Ajustes por data (bloquear dias/horários específicos)"}
+      </button>
+      {showOverrides && <AvailabilityOverridesEditor staffId={member.id} overrides={overrides} />}
     </div>
   );
 }
@@ -139,12 +152,14 @@ export function StaffEditor({
   services,
   staffServices,
   availability,
+  overrides,
 }: {
   biositeId: string;
   staff: Staff[];
   services: Service[];
   staffServices: StaffService[];
   availability: Availability[];
+  overrides: Override[];
 }) {
   const router = useRouter();
   const supabase = createClient();
@@ -171,6 +186,7 @@ export function StaffEditor({
             new Set(staffServices.filter((s) => s.staff_id === member.id).map((s) => s.service_id))
           }
           availability={availability.filter((a) => a.staff_id === member.id)}
+          overrides={overrides.filter((o) => o.staff_id === member.id)}
         />
       ))}
 
