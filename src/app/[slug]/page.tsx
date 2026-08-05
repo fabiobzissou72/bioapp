@@ -133,7 +133,7 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
           {biosite.business_name}
         </h1>
         {biosite.description && (
-          <p className={`mt-1 text-sm ${dark ? "text-neutral-400" : "text-neutral-500"}`}>
+          <p className={`mt-1 whitespace-pre-line text-sm ${dark ? "text-neutral-400" : "text-neutral-500"}`}>
             {biosite.description}
           </p>
         )}
