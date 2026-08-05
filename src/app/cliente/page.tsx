@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ClienteLogoutButton } from "@/components/cliente/ClienteLogoutButton";
-import { BookingCard } from "@/components/cliente/BookingCard";
+import { BookingTabs } from "@/components/cliente/BookingTabs";
 
 export const revalidate = 0;
 
@@ -54,12 +54,13 @@ export default async function ClientePage() {
     supabase.from("services").select("id, name").eq("biosite_id", access.biosite_id),
     supabase.from("staff").select("id, name").eq("biosite_id", access.biosite_id),
   ]);
-  const servicesById = new Map((services || []).map((s) => [s.id, s.name]));
-  const staffById = new Map((staff || []).map((s) => [s.id, s.name]));
+  const servicesById = Object.fromEntries((services || []).map((s) => [s.id, s.name]));
+  const staffById = Object.fromEntries((staff || []).map((s) => [s.id, s.name]));
 
   const todayISO = new Date().toISOString().slice(0, 10);
-  const upcoming = (bookings || []).filter((b) => b.booking_date >= todayISO && b.status !== "cancelled");
-  const past = (bookings || []).filter((b) => b.booking_date < todayISO || b.status === "cancelled");
+  const upcoming = (bookings || []).filter((b) => b.booking_date >= todayISO && b.status === "confirmed");
+  const history = (bookings || []).filter((b) => b.booking_date < todayISO && b.status !== "cancelled");
+  const cancelled = (bookings || []).filter((b) => b.status === "cancelled");
 
   return (
     <main className="min-h-screen bg-neutral-50 pb-16">
@@ -99,44 +100,15 @@ export default async function ClientePage() {
           </div>
         </div>
 
-        <h2 className="mb-3 mt-8 text-sm font-semibold text-neutral-700">
-          Próximos agendamentos ({upcoming.length})
-        </h2>
-        <div className="mb-8 flex flex-col gap-3">
-          {upcoming.length === 0 && (
-            <p className="rounded-xl border border-dashed border-neutral-200 py-6 text-center text-sm text-neutral-400">
-              Nenhum agendamento futuro.
-            </p>
-          )}
-          {upcoming.map((b) => (
-            <BookingCard
-              key={b.id}
-              booking={b}
-              serviceName={(b.service_id && servicesById.get(b.service_id)) || "Serviço"}
-              staffName={(b.staff_id && staffById.get(b.staff_id)) || null}
-              primaryColor={primaryColor}
-              canCancel
-            />
-          ))}
-        </div>
-
-        <h2 className="mb-3 text-sm font-semibold text-neutral-700">Histórico ({past.length})</h2>
-        <div className="flex flex-col gap-3">
-          {past.length === 0 && (
-            <p className="rounded-xl border border-dashed border-neutral-200 py-6 text-center text-sm text-neutral-400">
-              Nada por aqui ainda.
-            </p>
-          )}
-          {past.map((b) => (
-            <BookingCard
-              key={b.id}
-              booking={b}
-              serviceName={(b.service_id && servicesById.get(b.service_id)) || "Serviço"}
-              staffName={(b.staff_id && staffById.get(b.staff_id)) || null}
-              primaryColor={primaryColor}
-              canCancel={false}
-            />
-          ))}
+        <div className="mt-8">
+          <BookingTabs
+            upcoming={upcoming}
+            history={history}
+            cancelled={cancelled}
+            servicesById={servicesById}
+            staffById={staffById}
+            primaryColor={primaryColor}
+          />
         </div>
       </div>
     </main>
