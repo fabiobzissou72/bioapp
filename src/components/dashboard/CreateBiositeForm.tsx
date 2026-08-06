@@ -36,12 +36,18 @@ export function CreateBiositeForm({ disabled }: { disabled: boolean }) {
       .select("id")
       .single();
 
-    setLoading(false);
     if (error) {
+      setLoading(false);
       setError(error.code === "23505" ? "Esse endereço já está em uso." : "Erro ao criar biosite.");
       return;
     }
 
+    // Availability is keyed off staff_id, so a solo owner needs at least one
+    // default "professional" to be able to set weekly hours right away —
+    // they can rename it or add more people later.
+    await supabase.from("staff").insert({ biosite_id: data.id, name: "Profissional" });
+
+    setLoading(false);
     router.push(`/painel/${data.id}`);
   }
 
