@@ -38,3 +38,48 @@ export function assertVideoSizeOk(file: File) {
     );
   }
 }
+
+// In-app browsers (Instagram/Facebook's built-in webview, notably) often
+// refuse to decode/preload video before user interaction, leaving grid
+// thumbnails blank. A poster image is a plain <img>-like attribute that
+// always renders regardless of the browser's video-loading policy.
+export async function generateVideoPoster(file: File): Promise<Blob | null> {
+  if (!file.type.startsWith("video/")) return null;
+
+  return new Promise((resolve) => {
+    const video = document.createElement("video");
+    video.preload = "metadata";
+    video.muted = true;
+    video.playsInline = true;
+    const objectUrl = URL.createObjectURL(file);
+    video.src = objectUrl;
+
+    let settled = false;
+    function finish(blob: Blob | null) {
+      if (settled) return;
+      settled = true;
+      URL.revokeObjectURL(objectUrl);
+      resolve(blob);
+    }
+
+    video.addEventListener("loadeddata", () => {
+      video.currentTime = Math.min(0.1, video.duration || 0);
+    });
+
+    video.addEventListener("seeked", () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext("2d");
+      if (!ctx || canvas.width === 0) {
+        finish(null);
+        return;
+      }
+      ctx.drawImage(video, 0, 0);
+      canvas.toBlob((blob) => finish(blob), "image/jpeg", 0.8);
+    });
+
+    video.addEventListener("error", () => finish(null));
+    setTimeout(() => finish(null), 8000);
+  });
+}

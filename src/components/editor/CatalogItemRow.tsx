@@ -35,8 +35,11 @@ export function CatalogItemRow({
     setUploading(true);
     const mediaType = file.type.startsWith("video") ? "video" : "image";
     try {
-      const url = await uploadMedia(file, ownerId, "catalog");
-      await supabase.from("catalog_items").update({ media_url: url, media_type: mediaType }).eq("id", item.id);
+      const { url, posterUrl } = await uploadMedia(file, ownerId, "catalog");
+      await supabase
+        .from("catalog_items")
+        .update({ media_url: url, media_type: mediaType, poster_url: posterUrl })
+        .eq("id", item.id);
       router.refresh();
     } catch (err) {
       alert(err instanceof Error ? err.message : "Erro ao enviar o arquivo.");

@@ -23,6 +23,7 @@ function ItemCard({ item, primaryColor, dark }: { item: CatalogItem; primaryColo
           {item.media_type === "video" ? (
             <video
               src={item.media_url}
+              poster={item.poster_url || undefined}
               className={`h-full w-full ${item.object_fit === "contain" ? "object-contain" : "object-cover"}`}
               muted
               loop
@@ -120,6 +121,7 @@ function GridGroup({
               (item.media_type === "video" ? (
                 <video
                   src={item.media_url}
+                  poster={item.poster_url || undefined}
                   className="h-full w-full object-cover"
                   muted
                   playsInline

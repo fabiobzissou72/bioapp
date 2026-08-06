@@ -62,11 +62,12 @@ export function CatalogGroupCard({
     setUploading(true);
     const mediaType = file.type.startsWith("video") ? "video" : "image";
     try {
-      const url = await uploadMedia(file, ownerId, "catalog");
+      const { url, posterUrl } = await uploadMedia(file, ownerId, "catalog");
       await supabase.from("catalog_items").insert({
         group_id: group.id,
         media_type: mediaType,
         media_url: url,
+        poster_url: posterUrl,
         position: items.length,
       });
       router.refresh();

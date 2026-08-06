@@ -5,7 +5,12 @@ import { geocodeAddress } from "@/lib/geocode";
 
 type ServiceInput = { name: string; duration: number; price: number | null };
 type HoursInput = { weekday: number; start: string; end: string };
-type CatalogItemInput = { url: string; mediaType: "image" | "video"; itemType: "product" | "service" };
+type CatalogItemInput = {
+  url: string;
+  posterUrl?: string | null;
+  mediaType: "image" | "video";
+  itemType: "product" | "service";
+};
 
 function normalizeProfileUrl(value: string, host: string) {
   const trimmed = value.trim();
@@ -191,6 +196,7 @@ export async function POST(request: Request) {
         catalogItems.map((item: CatalogItemInput, i: number) => ({
           group_id: group.id,
           media_url: item.url,
+          poster_url: item.posterUrl || null,
           media_type: item.mediaType,
           item_type: item.itemType,
           position: i,

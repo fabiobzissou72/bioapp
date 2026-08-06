@@ -1,20 +1,33 @@
 import { createClient } from "@/lib/supabase/client";
-import { compressImage, assertVideoSizeOk } from "@/lib/mediaCompression";
+import { compressImage, assertVideoSizeOk, generateVideoPoster } from "@/lib/mediaCompression";
 
-export async function uploadMedia(file: File, userId: string, folder: string) {
+async function uploadFile(file: File, userId: string, folder: string, suffix = "") {
   const supabase = createClient();
-
-  assertVideoSizeOk(file);
-  const uploadFile = await compressImage(file);
-
-  const ext = uploadFile.name.split(".").pop();
-  const path = `${userId}/${folder}/${crypto.randomUUID()}.${ext}`;
-
+  const ext = file.name.split(".").pop();
+  const path = `${userId}/${folder}/${crypto.randomUUID()}${suffix}.${ext}`;
   const { error } = await supabase.storage
     .from("media")
-    .upload(path, uploadFile, { upsert: true, contentType: uploadFile.type });
+    .upload(path, file, { upsert: true, contentType: file.type });
   if (error) throw error;
+  return supabase.storage.from("media").getPublicUrl(path).data.publicUrl;
+}
 
-  const { data } = supabase.storage.from("media").getPublicUrl(path);
-  return data.publicUrl;
+export async function uploadMedia(
+  file: File,
+  userId: string,
+  folder: string
+): Promise<{ url: string; posterUrl: string | null }> {
+  assertVideoSizeOk(file);
+
+  let posterUrl: string | null = null;
+  if (file.type.startsWith("video/")) {
+    const posterBlob = await generateVideoPoster(file);
+    if (posterBlob) {
+      posterUrl = await uploadFile(new File([posterBlob], "poster.jpg", { type: "image/jpeg" }), userId, folder, "-poster");
+    }
+  }
+
+  const compressed = await compressImage(file);
+  const url = await uploadFile(compressed, userId, folder);
+  return { url, posterUrl };
 }

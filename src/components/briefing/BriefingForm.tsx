@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { slugify } from "@/lib/slugify";
-import { compressImage, assertVideoSizeOk } from "@/lib/mediaCompression";
+import { compressImage, assertVideoSizeOk, generateVideoPoster } from "@/lib/mediaCompression";
 
 const WEEKDAYS = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
 
@@ -13,15 +13,36 @@ type CatalogRow = { file: File; itemType: "product" | "service"; previewUrl: str
 const inputClass =
   "rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none focus:border-pink-400";
 
-async function uploadPublic(file: File): Promise<string> {
-  assertVideoSizeOk(file);
-  const uploadFile = await compressImage(file);
+async function uploadRaw(file: File): Promise<string> {
   const formData = new FormData();
-  formData.append("file", uploadFile);
+  formData.append("file", file);
   const res = await fetch("/api/briefing/upload", { method: "POST", body: formData });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || "Erro ao enviar arquivo.");
   return data.url;
+}
+
+async function uploadPublic(file: File): Promise<string> {
+  assertVideoSizeOk(file);
+  const compressed = await compressImage(file);
+  return uploadRaw(compressed);
+}
+
+// In-app browsers (Instagram/Facebook webview) often refuse to preload
+// video before user interaction, leaving thumbnails blank — a poster
+// image always renders regardless of that.
+async function uploadPublicMedia(file: File): Promise<{ url: string; posterUrl: string | null }> {
+  assertVideoSizeOk(file);
+  let posterUrl: string | null = null;
+  if (file.type.startsWith("video/")) {
+    const posterBlob = await generateVideoPoster(file);
+    if (posterBlob) {
+      posterUrl = await uploadRaw(new File([posterBlob], "poster.jpg", { type: "image/jpeg" }));
+    }
+  }
+  const compressed = await compressImage(file);
+  const url = await uploadRaw(compressed);
+  return { url, posterUrl };
 }
 
 export function BriefingForm() {
@@ -90,9 +111,10 @@ export function BriefingForm() {
 
       const catalogItems = [];
       for (const row of catalogRows) {
-        const url = await uploadPublic(row.file);
+        const { url, posterUrl } = await uploadPublicMedia(row.file);
         catalogItems.push({
           url,
+          posterUrl,
           mediaType: row.file.type.startsWith("video") ? "video" : "image",
           itemType: row.itemType,
         });

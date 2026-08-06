@@ -32,7 +32,7 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
     if (!file) return;
     setUploading("logo");
     try {
-      const url = await uploadMedia(file, biosite.owner_id, "logo");
+      const { url } = await uploadMedia(file, biosite.owner_id, "logo");
       setLogoUrl(url);
       await supabase.from("biosites").update({ logo_url: url }).eq("id", biosite.id);
       router.refresh();
@@ -49,7 +49,7 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
     setUploading("cover");
     const type = file.type.startsWith("video") ? "video" : "image";
     try {
-      const url = await uploadMedia(file, biosite.owner_id, "cover");
+      const { url } = await uploadMedia(file, biosite.owner_id, "cover");
       setCoverUrl(url);
       setCoverType(type);
       await supabase.from("biosites").update({ cover_url: url, cover_type: type }).eq("id", biosite.id);
