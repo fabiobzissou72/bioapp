@@ -60,8 +60,8 @@ function ItemCard({ item, primaryColor, dark }: { item: CatalogItem; primaryColo
         {item.cta_label && item.cta_url && (
           <a
             href={item.cta_url}
-            target="_blank"
-            rel="noopener noreferrer"
+            target={item.cta_url.startsWith("/") ? undefined : "_blank"}
+            rel={item.cta_url.startsWith("/") ? undefined : "noopener noreferrer"}
             style={{ backgroundColor: primaryColor, color: getContrastTextColor(primaryColor) }}
             className="mt-3 inline-block rounded-full px-4 py-2 text-sm font-medium"
           >
