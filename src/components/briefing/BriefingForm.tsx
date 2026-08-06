@@ -180,10 +180,7 @@ export function BriefingForm() {
           />
         </div>
         <div>
-          <p className="mb-1 text-xs text-neutral-500">
-            Uma frase curta que descreve o negócio e o que ele faz. Exemplos: &quot;Especialista em unhas
-            naturais&quot;, &quot;Cortes e barba em Pinheiros&quot;, &quot;Bolos e doces sob encomenda&quot;.
-          </p>
+          <p className="mb-1 text-xs text-neutral-500">Descreva seu negócio, o que você faz, em poucas palavras.</p>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
