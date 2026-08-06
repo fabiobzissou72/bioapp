@@ -118,7 +118,13 @@ function GridGroup({
           >
             {item.media_url &&
               (item.media_type === "video" ? (
-                <video src={item.media_url} className="h-full w-full object-cover" muted playsInline />
+                <video
+                  src={item.media_url}
+                  className="h-full w-full object-cover"
+                  muted
+                  playsInline
+                  preload="metadata"
+                />
               ) : (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={item.media_url} alt={item.title || ""} className="h-full w-full object-cover" />
