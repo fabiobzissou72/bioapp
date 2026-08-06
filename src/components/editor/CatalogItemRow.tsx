@@ -27,7 +27,9 @@ export function CatalogItemRow({
   const [ctaUrl, setCtaUrl] = useState(item.cta_url || "");
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [uploadingPoster, setUploadingPoster] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
+  const posterInput = useRef<HTMLInputElement>(null);
 
   async function replaceMedia(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -45,6 +47,23 @@ export function CatalogItemRow({
       alert(err instanceof Error ? err.message : "Erro ao enviar o arquivo.");
     } finally {
       setUploading(false);
+    }
+  }
+
+  // Manual override for when the auto-generated video poster doesn't show
+  // right (e.g. an older item uploaded before that feature existed).
+  async function replacePoster(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingPoster(true);
+    try {
+      const { url } = await uploadMedia(file, ownerId, "catalog");
+      await supabase.from("catalog_items").update({ poster_url: url }).eq("id", item.id);
+      router.refresh();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Erro ao enviar a miniatura.");
+    } finally {
+      setUploadingPoster(false);
     }
   }
 
@@ -70,29 +89,52 @@ export function CatalogItemRow({
 
   return (
     <div className="flex gap-3 rounded-lg border border-neutral-200 p-3">
-      <button
-        onClick={() => fileInput.current?.click()}
-        className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-dashed border-neutral-300 bg-neutral-50 text-xs text-neutral-400"
-      >
-        {uploading ? (
-          "..."
-        ) : item.media_url ? (
-          item.media_type === "video" ? (
-            <video src={item.media_url} className="h-full w-full object-cover" muted />
+      <div className="flex shrink-0 flex-col items-center gap-1">
+        <button
+          onClick={() => fileInput.current?.click()}
+          className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-lg border border-dashed border-neutral-300 bg-neutral-50 text-xs text-neutral-400"
+        >
+          {uploading ? (
+            "..."
+          ) : item.media_url ? (
+            item.media_type === "video" ? (
+              item.poster_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={item.poster_url} alt="" className="h-full w-full object-cover" />
+              ) : (
+                <video src={item.media_url} className="h-full w-full object-cover" muted />
+              )
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={item.media_url} alt="" className="h-full w-full object-cover" />
+            )
           ) : (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={item.media_url} alt="" className="h-full w-full object-cover" />
-          )
-        ) : (
-          "Mídia"
+            "Mídia"
+          )}
+        </button>
+        {item.media_type === "video" && (
+          <button
+            type="button"
+            onClick={() => posterInput.current?.click()}
+            className="text-[10px] font-medium text-pink-600"
+          >
+            {uploadingPoster ? "..." : "trocar miniatura"}
+          </button>
         )}
-      </button>
+      </div>
       <input
         ref={fileInput}
         type="file"
         accept="image/*,video/*"
         className="hidden"
         onChange={replaceMedia}
+      />
+      <input
+        ref={posterInput}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={replacePoster}
       />
 
       <div className="flex flex-1 flex-col gap-2">
