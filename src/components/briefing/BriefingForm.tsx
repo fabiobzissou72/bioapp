@@ -36,6 +36,7 @@ export function BriefingForm() {
   const [whatsapp, setWhatsapp] = useState("");
   const [instagram, setInstagram] = useState("");
   const [facebook, setFacebook] = useState("");
+  const [googleReview, setGoogleReview] = useState("");
 
   const [hasPix, setHasPix] = useState(false);
   const [pixKey, setPixKey] = useState("");
@@ -111,6 +112,7 @@ export function BriefingForm() {
           whatsapp,
           instagram,
           facebook,
+          googleReview,
           hasPix,
           pixKey,
           pixKeyType,
@@ -177,12 +179,18 @@ export function BriefingForm() {
             className={`flex-1 ${inputClass}`}
           />
         </div>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Frase curta sobre o negócio (ex: Especialista em unhas naturais)"
-          className={inputClass}
-        />
+        <div>
+          <p className="mb-1 text-xs text-neutral-500">
+            Uma frase curta que descreve o negócio e o que ele faz. Exemplos: &quot;Especialista em unhas
+            naturais&quot;, &quot;Cortes e barba em Pinheiros&quot;, &quot;Bolos e doces sob encomenda&quot;.
+          </p>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Escreva a descrição do seu negócio aqui"
+            className={inputClass}
+          />
+        </div>
         <label className="flex items-center gap-3 text-sm text-neutral-600">
           Cor principal da marca
           <input
@@ -193,7 +201,7 @@ export function BriefingForm() {
           />
         </label>
         <label className="text-sm text-neutral-600">
-          Logo (opcional)
+          Logo (opcional) — clique no botão abaixo e escolha a imagem da sua logo no celular ou computador
           <input
             type="file"
             accept="image/*"
@@ -202,7 +210,7 @@ export function BriefingForm() {
           />
         </label>
         <label className="text-sm text-neutral-600">
-          Foto ou vídeo de capa (opcional)
+          Foto ou vídeo de capa (opcional) — clique no botão abaixo e escolha o arquivo pra fazer o upload
           <input
             type="file"
             accept="image/*,video/*"
@@ -233,6 +241,18 @@ export function BriefingForm() {
           placeholder="Facebook (link, opcional)"
           className={inputClass}
         />
+        <div>
+          <p className="mb-1 text-xs text-neutral-500">
+            Link da sua página de avaliações do Google (se tiver). Ajuda a passar confiança pra quem visita a
+            página.
+          </p>
+          <input
+            value={googleReview}
+            onChange={(e) => setGoogleReview(e.target.value)}
+            placeholder="Link de avaliação no Google (opcional)"
+            className={inputClass}
+          />
+        </div>
 
         <label className="flex items-center gap-2 text-sm font-medium text-neutral-700">
           <input type="checkbox" checked={hasPix} onChange={(e) => setHasPix(e.target.checked)} />
@@ -281,8 +301,12 @@ export function BriefingForm() {
 
       <section className="flex flex-col gap-3 rounded-2xl border border-neutral-200 bg-white p-4">
         <h2 className="font-semibold text-neutral-900">4. Serviços</h2>
+        <p className="text-xs text-neutral-500">
+          Pra cada serviço, informe quanto tempo ele demora (em minutos — ex: 30, 45, 60) e o preço. Isso é
+          usado pra montar os horários de agendamento automaticamente.
+        </p>
         {services.map((s, i) => (
-          <div key={i} className="flex gap-2">
+          <div key={i} className="flex items-center gap-2">
             <input
               value={s.name}
               onChange={(e) =>
@@ -299,9 +323,10 @@ export function BriefingForm() {
                   prev.map((row, idx) => (idx === i ? { ...row, duration: e.target.value } : row))
                 )
               }
-              placeholder="Min"
+              placeholder="Ex: 45"
               className={`w-16 ${inputClass}`}
             />
+            <span className="text-xs text-neutral-400">min</span>
             <input
               value={s.price}
               onChange={(e) =>
@@ -412,6 +437,10 @@ export function BriefingForm() {
 
       <section className="flex flex-col gap-3 rounded-2xl border border-neutral-200 bg-white p-4">
         <h2 className="font-semibold text-neutral-900">6. Catálogo (fotos/vídeos dos trabalhos)</h2>
+        <p className="text-xs text-neutral-500">
+          Clique no botão abaixo pra fazer upload das fotos ou vídeos direto do seu celular ou computador — pode
+          escolher vários de uma vez.
+        </p>
         <input
           type="file"
           accept="image/*,video/*"

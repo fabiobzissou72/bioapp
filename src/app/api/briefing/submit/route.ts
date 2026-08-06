@@ -74,6 +74,16 @@ export async function POST(request: Request) {
     buttons.push({ biosite_id: biositeId, type: "facebook", url: facebookUrl, position: position++, config: {} });
   }
 
+  if (body.googleReview) {
+    buttons.push({
+      biosite_id: biositeId,
+      type: "google_review",
+      url: body.googleReview,
+      position: position++,
+      config: {},
+    });
+  }
+
   if (body.hasPix && body.pixKey) {
     buttons.push({
       biosite_id: biositeId,
