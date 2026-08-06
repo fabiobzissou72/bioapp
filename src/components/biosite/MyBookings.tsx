@@ -45,15 +45,14 @@ export function MyBookings({ biositeId }: { biositeId: string }) {
       <h2 className="mb-2 text-sm font-semibold text-neutral-700">Seus agendamentos</h2>
       <div className="flex flex-col gap-2">
         {upcoming.map((b) => (
-          <div key={b.id} className="flex items-center justify-between rounded-lg bg-neutral-50 px-3 py-2 text-sm">
-            <span className="text-neutral-700">
+          <div key={b.id} className="flex items-center justify-between gap-3 rounded-lg bg-neutral-50 px-3 py-2 text-sm">
+            <span className="flex-1 text-neutral-700">
               {b.service_name} · {b.booking_date.split("-").reverse().join("/")} às {b.booking_time.slice(0, 5)}
             </span>
             <button
               onClick={() => cancelBooking(b.id)}
               disabled={cancellingId === b.id}
-              className="text-xs font-medium text-red-500 hover:text-red-700 disabled:opacity-40"
-              style={{ color: cancellingId === b.id ? undefined : undefined }}
+              className="shrink-0 rounded-full bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-100 disabled:opacity-40"
             >
               {cancellingId === b.id ? "Cancelando..." : "Cancelar"}
             </button>
