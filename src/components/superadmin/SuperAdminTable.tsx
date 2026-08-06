@@ -10,27 +10,46 @@ type Row = {
   business_name: string;
   owner_id: string;
   published: boolean;
-  payment_status: string;
+  paid_until: string | null;
   admin_notes: string | null;
   business_whatsapp: string | null;
   created_at: string;
   agency_name: string;
 };
 
-const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
-  pago: { bg: "#dcfce7", text: "#166534" },
-  pendente: { bg: "#fef9c3", text: "#854d0e" },
-  atrasado: { bg: "#fee2e2", text: "#991b1b" },
-};
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function addOneMonth(from: string | null) {
+  const today = todayISO();
+  const base = from && from > today ? from : today;
+  const date = new Date(base + "T00:00:00");
+  date.setMonth(date.getMonth() + 1);
+  return date.toISOString().slice(0, 10);
+}
+
+function paymentBadge(paidUntil: string | null) {
+  if (!paidUntil) return { label: "nunca pago", bg: "#fee2e2", text: "#991b1b" };
+  const today = todayISO();
+  const daysLeft = Math.round(
+    (new Date(paidUntil + "T00:00:00").getTime() - new Date(today + "T00:00:00").getTime()) / 86400000
+  );
+  const dateLabel = paidUntil.split("-").reverse().join("/");
+  if (daysLeft < 0) return { label: `atrasado desde ${dateLabel}`, bg: "#fee2e2", text: "#991b1b" };
+  if (daysLeft <= 7) return { label: `vence em ${daysLeft}d (${dateLabel})`, bg: "#fef9c3", text: "#854d0e" };
+  return { label: `pago até ${dateLabel}`, bg: "#dcfce7", text: "#166534" };
+}
 
 function Row({ row }: { row: Row }) {
   const router = useRouter();
   const supabase = createClient();
   const [notes, setNotes] = useState(row.admin_notes || "");
   const [whatsapp, setWhatsapp] = useState(row.business_whatsapp || "");
+  const badge = paymentBadge(row.paid_until);
 
-  async function updateStatus(status: string) {
-    await supabase.from("biosites").update({ payment_status: status }).eq("id", row.id);
+  async function updatePaidUntil(date: string | null) {
+    await supabase.from("biosites").update({ paid_until: date }).eq("id", row.id);
     router.refresh();
   }
 
@@ -65,19 +84,27 @@ function Row({ row }: { row: Row }) {
         </span>
       </td>
       <td className="py-2 pr-3">
-        <select
-          value={row.payment_status}
-          onChange={(e) => updateStatus(e.target.value)}
-          className="rounded-full border-0 px-2 py-1 text-xs font-medium"
-          style={{
-            backgroundColor: STATUS_COLORS[row.payment_status]?.bg,
-            color: STATUS_COLORS[row.payment_status]?.text,
-          }}
-        >
-          <option value="pago">pago</option>
-          <option value="pendente">pendente</option>
-          <option value="atrasado">atrasado</option>
-        </select>
+        <div className="flex items-center gap-1.5">
+          <span
+            className="whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-medium"
+            style={{ backgroundColor: badge.bg, color: badge.text }}
+          >
+            {badge.label}
+          </span>
+          <button
+            onClick={() => updatePaidUntil(addOneMonth(row.paid_until))}
+            title="Marcar como pago por mais 1 mês"
+            className="rounded-full border border-neutral-200 px-2 py-0.5 text-xs font-medium text-neutral-600 hover:bg-neutral-50"
+          >
+            +1 mês
+          </button>
+        </div>
+        <input
+          type="date"
+          value={row.paid_until || ""}
+          onChange={(e) => updatePaidUntil(e.target.value || null)}
+          className="mt-1 rounded-lg border border-neutral-200 bg-white px-2 py-1 text-xs"
+        />
       </td>
       <td className="py-2 pr-3">
         <input
