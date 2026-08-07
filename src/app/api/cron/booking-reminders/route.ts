@@ -71,7 +71,7 @@ export async function GET(request: Request) {
       customer_phone: booking.customer_phone,
       service_name: booking.service_id ? serviceNameById.get(booking.service_id) || null : null,
       booking_date: booking.booking_date,
-      booking_time: booking.booking_time,
+      booking_time: booking.booking_time.slice(0, 5),
     };
 
     if (due24h) {
