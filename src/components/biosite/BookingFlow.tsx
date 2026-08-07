@@ -58,6 +58,7 @@ export function BookingFlow({
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [notes, setNotes] = useState("");
+  const [wantsReminder, setWantsReminder] = useState(false);
   const [occupied, setOccupied] = useState<OccupiedBlock[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
@@ -170,6 +171,7 @@ export function BookingFlow({
         notes: notes || null,
         bookingDate: formatDateISO(date),
         bookingTime: time,
+        wantsReminder,
       }),
     });
     const data = await res.json();
@@ -365,6 +367,16 @@ export function BookingFlow({
                 : "border-neutral-200 bg-white text-neutral-900"
             }`}
           />
+          <label
+            className={`flex items-center gap-2 text-sm ${dark ? "text-neutral-300" : "text-neutral-600"}`}
+          >
+            <input
+              type="checkbox"
+              checked={wantsReminder}
+              onChange={(e) => setWantsReminder(e.target.checked)}
+            />
+            Quero receber um lembrete no WhatsApp antes do meu horário
+          </label>
           {error && <p className="text-sm text-red-500">{error}</p>}
           <button
             onClick={confirmBooking}

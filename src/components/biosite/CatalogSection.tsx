@@ -19,7 +19,7 @@ function ItemCard({ item, primaryColor, dark }: { item: CatalogItem; primaryColo
       }`}
     >
       {item.media_url && (
-        <div className={`relative w-full overflow-hidden bg-neutral-100 ${ASPECT_CLASS[item.aspect]}`}>
+        <div className={`relative w-full max-h-[340px] overflow-hidden bg-neutral-100 ${ASPECT_CLASS[item.aspect]}`}>
           {item.media_type === "video" ? (
             <video
               src={item.media_url}

@@ -2,7 +2,7 @@
 // Never blocks or fails the booking flow if the webhook is down/unset.
 export async function notifyWebhook(
   webhookUrl: string | null | undefined,
-  event: "booking.created" | "booking.cancelled",
+  event: "booking.created" | "booking.cancelled" | "booking.reminder",
   payload: Record<string, unknown>
 ) {
   if (!webhookUrl) {

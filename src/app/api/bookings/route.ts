@@ -3,8 +3,17 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { notifyWebhook } from "@/lib/notifyWebhook";
 
 export async function POST(request: Request) {
-  const { biositeId, serviceId, staffId, customerName, customerPhone, notes, bookingDate, bookingTime } =
-    await request.json();
+  const {
+    biositeId,
+    serviceId,
+    staffId,
+    customerName,
+    customerPhone,
+    notes,
+    bookingDate,
+    bookingTime,
+    wantsReminder,
+  } = await request.json();
 
   if (!biositeId || !serviceId || !customerName || !customerPhone || !bookingDate || !bookingTime) {
     return NextResponse.json({ error: "Dados incompletos." }, { status: 400 });
@@ -32,6 +41,7 @@ export async function POST(request: Request) {
       notes: notes || null,
       booking_date: bookingDate,
       booking_time: bookingTime,
+      wants_reminder: !!wantsReminder,
     })
     .select("id")
     .single();
