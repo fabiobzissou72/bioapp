@@ -39,6 +39,7 @@ export function BookingFlow({
   staff,
   staffServices,
   availability,
+  dark = false,
 }: {
   biositeId: string;
   primaryColor: string;
@@ -46,6 +47,7 @@ export function BookingFlow({
   staff: Staff[];
   staffServices: StaffService[];
   availability: Availability[];
+  dark?: boolean;
 }) {
   const supabase = createClient();
 
@@ -60,6 +62,10 @@ export function BookingFlow({
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const surfaceBg = dark ? "#18181b" : "white";
+  const surfaceBorder = dark ? "#3f3f46" : "#e5e5e5";
+  const surfaceText = dark ? "#e5e5e5" : "#333";
 
   const eligibleStaff = useMemo(() => {
     if (!service) return staff;
@@ -191,10 +197,16 @@ export function BookingFlow({
 
   if (done) {
     return (
-      <div className="flex flex-col items-center gap-2 rounded-2xl bg-white p-6 text-center shadow-sm">
+      <div
+        className={`flex flex-col items-center gap-2 rounded-2xl p-6 text-center shadow-sm ${
+          dark ? "bg-neutral-900" : "bg-white"
+        }`}
+      >
         <div className="text-3xl">✅</div>
-        <h2 className="text-lg font-semibold text-neutral-900">Agendamento confirmado!</h2>
-        <p className="text-sm text-neutral-500">
+        <h2 className={`text-lg font-semibold ${dark ? "text-neutral-50" : "text-neutral-900"}`}>
+          Agendamento confirmado!
+        </h2>
+        <p className={`text-sm ${dark ? "text-neutral-400" : "text-neutral-500"}`}>
           {service?.name} em {date && formatDateISO(date).split("-").reverse().join("/")} às {time}
         </p>
       </div>
@@ -206,14 +218,18 @@ export function BookingFlow({
       {service && (
         <button
           onClick={goBack}
-          className="flex items-center gap-1 self-start text-sm font-medium text-neutral-500 hover:text-neutral-800"
+          className={`flex items-center gap-1 self-start text-sm font-medium ${
+            dark ? "text-neutral-400 hover:text-neutral-100" : "text-neutral-500 hover:text-neutral-800"
+          }`}
         >
           ← Voltar
         </button>
       )}
 
       <section>
-        <h2 className="mb-2 text-sm font-semibold text-neutral-700">Escolha o serviço</h2>
+        <h2 className={`mb-2 text-sm font-semibold ${dark ? "text-neutral-300" : "text-neutral-700"}`}>
+          Escolha o serviço
+        </h2>
         <div className="flex flex-col gap-2">
           {services.map((s) => (
             <button
@@ -226,13 +242,15 @@ export function BookingFlow({
               }}
               className="flex items-center justify-between rounded-xl border px-4 py-3 text-left text-sm transition"
               style={{
-                borderColor: service?.id === s.id ? primaryColor : "#e5e5e5",
-                backgroundColor: service?.id === s.id ? `${primaryColor}14` : "white",
+                borderColor: service?.id === s.id ? primaryColor : surfaceBorder,
+                backgroundColor: service?.id === s.id ? `${primaryColor}14` : surfaceBg,
               }}
             >
               <span>
-                <span className="block font-medium text-neutral-900">{s.name}</span>
-                <span className="text-neutral-500">
+                <span className={`block font-medium ${dark ? "text-neutral-50" : "text-neutral-900"}`}>
+                  {s.name}
+                </span>
+                <span className={dark ? "text-neutral-400" : "text-neutral-500"}>
                   {s.duration_minutes} min{s.price ? ` · R$ ${s.price.toFixed(2)}` : ""}
                 </span>
               </span>
@@ -243,7 +261,7 @@ export function BookingFlow({
 
       {service && eligibleStaff.length >= 1 && (
         <section>
-          <h2 className="mb-2 text-sm font-semibold text-neutral-700">
+          <h2 className={`mb-2 text-sm font-semibold ${dark ? "text-neutral-300" : "text-neutral-700"}`}>
             {eligibleStaff.length > 1 ? "Escolha o profissional" : "Profissional"}
           </h2>
           <div className="flex flex-wrap gap-2">
@@ -257,8 +275,9 @@ export function BookingFlow({
                 }}
                 className="rounded-full border px-4 py-2 text-sm"
                 style={{
-                  borderColor: activeStaff?.id === s.id ? primaryColor : "#e5e5e5",
-                  backgroundColor: activeStaff?.id === s.id ? `${primaryColor}14` : "white",
+                  borderColor: activeStaff?.id === s.id ? primaryColor : surfaceBorder,
+                  backgroundColor: activeStaff?.id === s.id ? `${primaryColor}14` : surfaceBg,
+                  color: dark ? "#fafafa" : undefined,
                 }}
               >
                 {s.name}
@@ -270,28 +289,34 @@ export function BookingFlow({
 
       {service && activeStaff && (
         <section>
-          <h2 className="mb-2 text-sm font-semibold text-neutral-700">Escolha o horário</h2>
+          <h2 className={`mb-2 text-sm font-semibold ${dark ? "text-neutral-300" : "text-neutral-700"}`}>
+            Escolha o horário
+          </h2>
           <div className="mb-3">
-            <MonthCalendar selectedDate={date} onSelect={selectDate} primaryColor={primaryColor} />
+            <MonthCalendar selectedDate={date} onSelect={selectDate} primaryColor={primaryColor} dark={dark} />
           </div>
 
           {date && (
             <div className="flex flex-col gap-3">
               {slots.length === 0 && (
-                <p className="text-sm text-neutral-400">Sem horários disponíveis nesse dia.</p>
+                <p className={`text-sm ${dark ? "text-neutral-500" : "text-neutral-400"}`}>
+                  Sem horários disponíveis nesse dia.
+                </p>
               )}
               {slotGroups.map((group) => (
                 <div key={group.label}>
-                  <p className="mb-1.5 text-xs font-medium text-neutral-500">{group.label}</p>
+                  <p className={`mb-1.5 text-xs font-medium ${dark ? "text-neutral-400" : "text-neutral-500"}`}>
+                    {group.label}
+                  </p>
                   <div className="grid grid-cols-3 gap-2">
                     {group.slots.map((slot) => (
                       <button
                         key={slot}
                         onClick={() => setTime(slot)}
                         style={{
-                          backgroundColor: time === slot ? primaryColor : "white",
-                          color: time === slot ? "white" : "#333",
-                          borderColor: time === slot ? primaryColor : "#e5e5e5",
+                          backgroundColor: time === slot ? primaryColor : surfaceBg,
+                          color: time === slot ? "white" : surfaceText,
+                          borderColor: time === slot ? primaryColor : surfaceBorder,
                         }}
                         className="rounded-full border px-3 py-2 text-sm"
                       >
@@ -307,24 +332,38 @@ export function BookingFlow({
       )}
 
       {time && (
-        <section className="flex flex-col gap-3 rounded-2xl bg-white p-4 shadow-sm">
+        <section
+          className={`flex flex-col gap-3 rounded-2xl p-4 shadow-sm ${dark ? "bg-neutral-900" : "bg-white"}`}
+        >
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Seu nome"
-            className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none"
+            className={`rounded-lg border px-3 py-2 text-sm outline-none ${
+              dark
+                ? "border-neutral-700 bg-neutral-800 text-neutral-50 placeholder:text-neutral-500"
+                : "border-neutral-200 bg-white text-neutral-900"
+            }`}
           />
           <input
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="Seu telefone"
-            className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none"
+            className={`rounded-lg border px-3 py-2 text-sm outline-none ${
+              dark
+                ? "border-neutral-700 bg-neutral-800 text-neutral-50 placeholder:text-neutral-500"
+                : "border-neutral-200 bg-white text-neutral-900"
+            }`}
           />
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Observações (opcional)"
-            className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none"
+            className={`rounded-lg border px-3 py-2 text-sm outline-none ${
+              dark
+                ? "border-neutral-700 bg-neutral-800 text-neutral-50 placeholder:text-neutral-500"
+                : "border-neutral-200 bg-white text-neutral-900"
+            }`}
           />
           {error && <p className="text-sm text-red-500">{error}</p>}
           <button

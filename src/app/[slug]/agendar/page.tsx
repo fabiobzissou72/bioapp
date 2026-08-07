@@ -68,7 +68,7 @@ export default async function AgendarPage({ params }: { params: Promise<{ slug: 
         </h1>
       </div>
 
-      <MyBookings biositeId={biosite.id} />
+      <MyBookings biositeId={biosite.id} dark={dark} />
 
       <BookingFlow
         biositeId={biosite.id}
@@ -77,6 +77,7 @@ export default async function AgendarPage({ params }: { params: Promise<{ slug: 
         staff={(staff || []) as Staff[]}
         staffServices={staffServices || []}
         availability={availability || []}
+        dark={dark}
       />
     </main>
   );

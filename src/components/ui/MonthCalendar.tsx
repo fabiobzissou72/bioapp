@@ -36,12 +36,14 @@ export function MonthCalendar({
   primaryColor,
   minDate,
   dayClassName,
+  dark = false,
 }: {
   selectedDate: Date | null;
   onSelect: (date: Date) => void;
   primaryColor: string;
   minDate?: Date;
   dayClassName?: (date: Date) => string | undefined;
+  dark?: boolean;
 }) {
   const [cursor, setCursor] = useState(() => {
     const base = selectedDate || new Date();
@@ -60,26 +62,26 @@ export function MonthCalendar({
   ];
 
   return (
-    <div className="rounded-xl border border-neutral-200 p-3">
+    <div className={`rounded-xl border p-3 ${dark ? "border-neutral-700" : "border-neutral-200"}`}>
       <div className="mb-2 flex items-center justify-between">
         <button
           onClick={() => setCursor(new Date(year, month - 1, 1))}
-          className="px-2 text-neutral-400 hover:text-neutral-700"
+          className={dark ? "px-2 text-neutral-500 hover:text-neutral-200" : "px-2 text-neutral-400 hover:text-neutral-700"}
         >
           ‹
         </button>
-        <span className="text-sm font-medium text-neutral-900">
+        <span className={`text-sm font-medium ${dark ? "text-neutral-50" : "text-neutral-900"}`}>
           {MONTH_LABELS[month]} {year}
         </span>
         <button
           onClick={() => setCursor(new Date(year, month + 1, 1))}
-          className="px-2 text-neutral-400 hover:text-neutral-700"
+          className={dark ? "px-2 text-neutral-500 hover:text-neutral-200" : "px-2 text-neutral-400 hover:text-neutral-700"}
         >
           ›
         </button>
       </div>
 
-      <div className="grid grid-cols-7 gap-1 text-center text-xs text-neutral-400">
+      <div className={`grid grid-cols-7 gap-1 text-center text-xs ${dark ? "text-neutral-500" : "text-neutral-400"}`}>
         {WEEKDAY_LABELS.map((d) => (
           <div key={d} className="py-1">
             {d}
@@ -100,7 +102,13 @@ export function MonthCalendar({
               disabled={disabled}
               onClick={() => onSelect(date)}
               className={`aspect-square rounded-full text-sm transition ${
-                disabled ? "text-neutral-300" : "text-neutral-700 hover:bg-neutral-100"
+                disabled
+                  ? dark
+                    ? "text-neutral-700"
+                    : "text-neutral-300"
+                  : dark
+                    ? "text-neutral-300 hover:bg-neutral-800"
+                    : "text-neutral-700 hover:bg-neutral-100"
               } ${extraClass || ""}`}
               style={
                 isSelected

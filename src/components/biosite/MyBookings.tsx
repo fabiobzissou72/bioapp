@@ -11,7 +11,7 @@ type MyBooking = {
   service_name: string;
 };
 
-export function MyBookings({ biositeId }: { biositeId: string }) {
+export function MyBookings({ biositeId, dark = false }: { biositeId: string; dark?: boolean }) {
   const [bookings, setBookings] = useState<MyBooking[] | null>(null);
   const [cancellingId, setCancellingId] = useState<string | null>(null);
 
@@ -41,12 +41,23 @@ export function MyBookings({ biositeId }: { biositeId: string }) {
   if (!bookings || upcoming.length === 0) return null;
 
   return (
-    <section className="mb-5 rounded-xl border border-neutral-200 bg-white p-4">
-      <h2 className="mb-2 text-sm font-semibold text-neutral-700">Seus agendamentos</h2>
+    <section
+      className={`mb-5 rounded-xl border p-4 ${
+        dark ? "border-neutral-800 bg-neutral-900" : "border-neutral-200 bg-white"
+      }`}
+    >
+      <h2 className={`mb-2 text-sm font-semibold ${dark ? "text-neutral-300" : "text-neutral-700"}`}>
+        Seus agendamentos
+      </h2>
       <div className="flex flex-col gap-2">
         {upcoming.map((b) => (
-          <div key={b.id} className="flex items-center justify-between gap-3 rounded-lg bg-neutral-50 px-3 py-2 text-sm">
-            <span className="flex-1 text-neutral-700">
+          <div
+            key={b.id}
+            className={`flex items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm ${
+              dark ? "bg-neutral-800" : "bg-neutral-50"
+            }`}
+          >
+            <span className={`flex-1 ${dark ? "text-neutral-300" : "text-neutral-700"}`}>
               {b.service_name} · {b.booking_date.split("-").reverse().join("/")} às {b.booking_time.slice(0, 5)}
             </span>
             <button

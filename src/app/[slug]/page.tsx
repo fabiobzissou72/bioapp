@@ -139,7 +139,7 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
         )}
       </div>
 
-      <MyBookings biositeId={biosite.id} />
+      <MyBookings biositeId={biosite.id} dark={dark} />
 
       <ButtonList
         biositeId={biosite.id}
