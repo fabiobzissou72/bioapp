@@ -101,6 +101,21 @@ export function BookingFlow({
     return result;
   }, [date, activeStaff, service, availability, occupied, getEffectiveDuration]);
 
+  const slotGroups = useMemo(() => {
+    const groups = [
+      { label: "Manhã", slots: [] as string[] },
+      { label: "Tarde", slots: [] as string[] },
+      { label: "Noite", slots: [] as string[] },
+    ];
+    for (const slot of slots) {
+      const hour = parseInt(slot.slice(0, 2), 10);
+      if (hour < 12) groups[0].slots.push(slot);
+      else if (hour < 18) groups[1].slots.push(slot);
+      else groups[2].slots.push(slot);
+    }
+    return groups.filter((g) => g.slots.length > 0);
+  }, [slots]);
+
   async function selectDate(d: Date) {
     setDate(d);
     setTime(null);
@@ -261,23 +276,30 @@ export function BookingFlow({
           </div>
 
           {date && (
-            <div className="grid grid-cols-3 gap-2">
+            <div className="flex flex-col gap-3">
               {slots.length === 0 && (
-                <p className="col-span-3 text-sm text-neutral-400">Sem horários disponíveis nesse dia.</p>
+                <p className="text-sm text-neutral-400">Sem horários disponíveis nesse dia.</p>
               )}
-              {slots.map((slot) => (
-                <button
-                  key={slot}
-                  onClick={() => setTime(slot)}
-                  style={{
-                    backgroundColor: time === slot ? primaryColor : "white",
-                    color: time === slot ? "white" : "#333",
-                    borderColor: time === slot ? primaryColor : "#e5e5e5",
-                  }}
-                  className="rounded-full border px-3 py-2 text-sm"
-                >
-                  {slot}
-                </button>
+              {slotGroups.map((group) => (
+                <div key={group.label}>
+                  <p className="mb-1.5 text-xs font-medium text-neutral-500">{group.label}</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {group.slots.map((slot) => (
+                      <button
+                        key={slot}
+                        onClick={() => setTime(slot)}
+                        style={{
+                          backgroundColor: time === slot ? primaryColor : "white",
+                          color: time === slot ? "white" : "#333",
+                          borderColor: time === slot ? primaryColor : "#e5e5e5",
+                        }}
+                        className="rounded-full border px-3 py-2 text-sm"
+                      >
+                        {slot}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
           )}
