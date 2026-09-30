@@ -31,7 +31,7 @@ export function Sidebar({
   }
 
   return (
-    <aside className="flex h-screen w-56 shrink-0 flex-col justify-between border-r border-neutral-200 bg-white p-4">
+    <aside className="sticky top-0 flex h-screen w-56 shrink-0 flex-col justify-between border-r border-neutral-200 bg-white p-4">
       <div>
         <h1 className="mb-6 truncate text-lg font-bold text-neutral-900">{agencyName}</h1>
         <nav className="flex flex-col gap-1">
@@ -41,8 +41,8 @@ export function Sidebar({
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium ${
-                  active ? "bg-pink-50 text-pink-600" : "text-neutral-600 hover:bg-neutral-50"
+                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition ${
+                  active ? "bg-[#191970] text-white" : "text-neutral-600 hover:bg-neutral-100"
                 }`}
               >
                 <span>{item.icon}</span>

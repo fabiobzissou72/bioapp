@@ -22,7 +22,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         planLimit={profile?.plan_limit || 30}
         isSuperAdmin={profile?.is_super_admin || false}
       />
-      <div className="flex-1">{children}</div>
+      <div className="min-h-screen flex-1 bg-[#faf9f5]">{children}</div>
     </div>
   );
 }

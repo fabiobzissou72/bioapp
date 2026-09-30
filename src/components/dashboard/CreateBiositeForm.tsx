@@ -90,7 +90,7 @@ export function CreateBiositeForm({
       <button
         onClick={() => setOpen(true)}
         disabled={disabled}
-        className="w-full rounded-xl border-2 border-dashed border-neutral-200 py-4 text-sm font-medium text-neutral-500 hover:border-pink-300 hover:text-pink-600 disabled:opacity-40"
+        className="w-full rounded-xl border-2 border-dashed border-neutral-200 py-4 text-sm font-medium text-neutral-500 hover:border-[#191970]/40 hover:text-[#191970] disabled:opacity-40"
       >
         + Criar novo biosite
       </button>
@@ -114,7 +114,7 @@ export function CreateBiositeForm({
               onClick={() => setCloneFrom(null)}
               className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
                 cloneFrom === null
-                  ? "border-pink-600 bg-pink-600 text-white"
+                  ? "border-[#191970] bg-[#191970] text-white"
                   : "border-neutral-200 text-neutral-600 hover:border-neutral-300"
               }`}
             >
@@ -127,7 +127,7 @@ export function CreateBiositeForm({
                 onClick={() => setCloneFrom(opt.id)}
                 className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
                   cloneFrom === opt.id
-                    ? "border-pink-600 bg-pink-600 text-white"
+                    ? "border-[#191970] bg-[#191970] text-white"
                     : "border-neutral-200 text-neutral-600 hover:border-neutral-300"
                 }`}
               >
@@ -162,7 +162,7 @@ export function CreateBiositeForm({
         <button
           type="submit"
           disabled={loading}
-          className="rounded-full bg-pink-600 px-5 py-2 text-sm font-medium text-white disabled:opacity-40"
+          className="rounded-full bg-[#191970] px-5 py-2 text-sm font-medium text-white disabled:opacity-40"
         >
           {loading ? "Criando..." : "Criar"}
         </button>

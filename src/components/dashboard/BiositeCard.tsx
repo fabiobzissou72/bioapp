@@ -27,7 +27,7 @@ export function BiositeCard({ biosite }: { biosite: Biosite }) {
   }
 
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-neutral-200 p-3 hover:border-pink-300">
+    <div className="flex items-center gap-3 rounded-xl border border-neutral-200 bg-white p-3 shadow-sm transition hover:border-[#191970]/40">
       <Link href={`/painel/${biosite.id}`} className="flex min-w-0 flex-1 items-center gap-3">
         <div
           className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-white"
