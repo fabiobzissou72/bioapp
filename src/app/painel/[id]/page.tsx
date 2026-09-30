@@ -6,6 +6,7 @@ import { BiositeInfoForm } from "@/components/editor/BiositeInfoForm";
 import { ProgressChecklist } from "@/components/editor/ProgressChecklist";
 import { EditorTabs } from "@/components/editor/EditorTabs";
 import { PreviewPhone } from "@/components/editor/PreviewPhone";
+import { LivePreviewPanel } from "@/components/editor/LivePreviewPanel";
 import { ButtonsEditor } from "@/components/editor/ButtonsEditor";
 import { ServicesEditor } from "@/components/editor/ServicesEditor";
 import { StaffEditor } from "@/components/editor/StaffEditor";
@@ -72,7 +73,7 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
   const publicUrl = `${protocol}://${host}/${biosite.slug}`;
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-2xl px-4 pb-16 pt-6">
+    <main className="mx-auto min-h-screen w-full max-w-6xl px-4 pb-16 pt-6">
       <div className="mb-4 flex items-center justify-between">
         <Link href="/painel" className="text-sm text-neutral-500 hover:text-neutral-800">
           ← Voltar
@@ -86,13 +87,15 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
             href={`/${biosite.slug}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-medium text-pink-600"
+            className="text-sm font-medium text-pink-600 lg:hidden"
           >
             Ver biosite →
           </a>
         </div>
       </div>
 
+      <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none lg:flex lg:items-start lg:gap-6">
+      <div className="min-w-0 flex-1">
       <ProgressChecklist
         items={[
           { label: "Nome do negócio", done: Boolean(biosite.business_name?.trim()) },
@@ -180,8 +183,14 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
           },
         ]}
       />
+      </div>
 
-      <PreviewPhone url={publicUrl} />
+      <LivePreviewPanel url={publicUrl} />
+      </div>
+
+      <div className="lg:hidden">
+        <PreviewPhone url={publicUrl} />
+      </div>
     </main>
   );
 }
