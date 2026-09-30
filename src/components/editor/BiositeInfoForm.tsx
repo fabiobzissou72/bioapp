@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { uploadMedia } from "@/lib/upload";
@@ -22,10 +22,23 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
   const [coverUrl, setCoverUrl] = useState(biosite.cover_url);
   const [coverType, setCoverType] = useState(biosite.cover_type);
   const [saving, setSaving] = useState(false);
+  const [autosaveStatus, setAutosaveStatus] = useState<"idle" | "saving" | "saved">("idle");
   const [uploading, setUploading] = useState<"logo" | "cover" | null>(null);
 
   const logoInput = useRef<HTMLInputElement>(null);
   const coverInput = useRef<HTMLInputElement>(null);
+  // Snapshot of the persisted values, so the autosave effect can tell a real edit apart from
+  // React Strict Mode's double effect invocation in development.
+  const lastSaved = useRef({
+    name,
+    description,
+    color,
+    buttonTextColor,
+    logoShape,
+    logoTransparent,
+    theme,
+    published,
+  });
 
   async function handleLogoChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -80,6 +93,37 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
     setSaving(false);
     router.refresh();
   }
+
+  // Autosave: debounce field changes and persist quietly, without requiring the "Salvar" click.
+  // Compares against the last-saved snapshot (not a mount flag) so Strict Mode's double effect
+  // invocation in development doesn't trigger a spurious save.
+  useEffect(() => {
+    const current = { name, description, color, buttonTextColor, logoShape, logoTransparent, theme, published };
+    if (JSON.stringify(current) === JSON.stringify(lastSaved.current)) return;
+
+    setAutosaveStatus("saving");
+    const timeout = setTimeout(async () => {
+      await supabase
+        .from("biosites")
+        .update({
+          business_name: name,
+          description,
+          primary_color: color,
+          button_text_color: buttonTextColor || null,
+          logo_shape: logoShape,
+          logo_transparent: logoTransparent,
+          theme,
+          published,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", biosite.id);
+      lastSaved.current = current;
+      setAutosaveStatus("saved");
+      router.refresh();
+    }, 900);
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [name, description, color, buttonTextColor, logoShape, logoTransparent, theme, published]);
 
   return (
     <section className="flex flex-col gap-4 rounded-xl border border-neutral-200 p-4">
@@ -226,13 +270,20 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
         Publicado
       </label>
 
-      <button
-        onClick={handleSave}
-        disabled={saving}
-        className="self-start rounded-full bg-pink-600 px-5 py-2 text-sm font-medium text-white disabled:opacity-40"
-      >
-        {saving ? "Salvando..." : "Salvar"}
-      </button>
+      <div className="flex items-center gap-3">
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="self-start rounded-full bg-pink-600 px-5 py-2 text-sm font-medium text-white disabled:opacity-40"
+        >
+          {saving ? "Salvando..." : "Salvar agora"}
+        </button>
+        {autosaveStatus !== "idle" && (
+          <span className="text-xs text-neutral-400">
+            {autosaveStatus === "saving" ? "Salvando automaticamente..." : "Salvo automaticamente ✓"}
+          </span>
+        )}
+      </div>
     </section>
   );
 }

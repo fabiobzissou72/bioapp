@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { BiositeInfoForm } from "@/components/editor/BiositeInfoForm";
+import { ProgressChecklist } from "@/components/editor/ProgressChecklist";
 import { ButtonsEditor } from "@/components/editor/ButtonsEditor";
 import { ServicesEditor } from "@/components/editor/ServicesEditor";
 import { StaffEditor } from "@/components/editor/StaffEditor";
@@ -89,6 +90,16 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
           </a>
         </div>
       </div>
+
+      <ProgressChecklist
+        items={[
+          { label: "Nome do negócio", done: Boolean(biosite.business_name?.trim()) },
+          { label: "Descrição", done: Boolean(biosite.description?.trim()) },
+          { label: "Foto de perfil ou logo", done: Boolean(biosite.logo_url) },
+          { label: "Pelo menos 1 botão ativo", done: (buttons || []).length > 0 },
+          { label: "Biosite publicado", done: biosite.published },
+        ]}
+      />
 
       <BiositeInfoForm biosite={biosite} />
 
