@@ -107,7 +107,7 @@ export function BiositeInfoForm({ biosite }: { biosite: Biosite }) {
   }, [name, description, logoShape, logoTransparent, published]);
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-neutral-200 p-4">
+    <section className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-4">
       <div className="flex items-center gap-4">
         <button
           onClick={() => logoInput.current?.click()}

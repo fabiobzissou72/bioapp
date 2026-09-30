@@ -38,6 +38,10 @@ export type Biosite = {
   primary_color: string;
   button_text_color: string | null;
   theme: "light" | "dark";
+  logo_size: "small" | "medium" | "large";
+  font_family: "default" | "poppins" | "playfair" | "bebas" | "caveat" | "oswald" | "merriweather";
+  background_image_url: string | null;
+  background_darken: boolean;
   seo_title: string | null;
   seo_description: string | null;
   seo_keywords: string | null;

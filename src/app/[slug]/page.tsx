@@ -7,7 +7,23 @@ import { MyBookings } from "@/components/biosite/MyBookings";
 import { AddressBlock } from "@/components/biosite/AddressBlock";
 import { SocialIconRow } from "@/components/biosite/SocialIconRow";
 import { SOCIAL_BUTTON_TYPES } from "@/lib/socialTypes";
-import type { BiositeButton, CatalogGroup, CatalogItem } from "@/lib/types";
+import type { Biosite, BiositeButton, CatalogGroup, CatalogItem } from "@/lib/types";
+
+const FONT_CONFIG: Record<Biosite["font_family"], { family: string; googleFont: string } | null> = {
+  default: null,
+  poppins: { family: "'Poppins', sans-serif", googleFont: "Poppins:wght@400;600;700" },
+  playfair: { family: "'Playfair Display', serif", googleFont: "Playfair+Display:wght@400;600;700" },
+  bebas: { family: "'Bebas Neue', sans-serif", googleFont: "Bebas+Neue" },
+  caveat: { family: "'Caveat', cursive", googleFont: "Caveat:wght@400;700" },
+  oswald: { family: "'Oswald', sans-serif", googleFont: "Oswald:wght@400;600;700" },
+  merriweather: { family: "'Merriweather', serif", googleFont: "Merriweather:wght@400;700" },
+};
+
+const LOGO_SIZE_CLASSES: Record<Biosite["logo_size"], string> = {
+  small: "h-20 w-20",
+  medium: "h-28 w-28",
+  large: "h-36 w-36",
+};
 
 export const revalidate = 0;
 
@@ -91,12 +107,34 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
   const addressButtons = allButtons.filter((b) => b.type === "address");
   const socialButtons = allButtons.filter((b) => SOCIAL_BUTTON_TYPES.has(b.type));
   const otherButtons = allButtons.filter((b) => b.type !== "address" && !SOCIAL_BUTTON_TYPES.has(b.type));
+  const font = FONT_CONFIG[biosite.font_family as Biosite["font_family"]] ?? null;
+  const logoSizeClass = LOGO_SIZE_CLASSES[biosite.logo_size as Biosite["logo_size"]] ?? LOGO_SIZE_CLASSES.medium;
 
   return (
-    <main
-      className="mx-auto flex min-h-screen w-full max-w-md flex-col items-center gap-5 px-4 pb-10 pt-6"
-      style={{ backgroundColor: dark ? "#0f0f10" : "#faf9f9" }}
-    >
+    <>
+      {font && (
+        <link
+          rel="stylesheet"
+          href={`https://fonts.googleapis.com/css2?family=${font.googleFont}&display=swap`}
+        />
+      )}
+
+      {biosite.background_image_url && (
+        <div
+          className="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${biosite.background_image_url})` }}
+        >
+          {biosite.background_darken && <div className="absolute inset-0 bg-black/35" />}
+        </div>
+      )}
+
+      <main
+        className="relative mx-auto flex min-h-screen w-full max-w-md flex-col items-center gap-5 px-4 pb-10 pt-6"
+        style={{
+          backgroundColor: biosite.background_image_url ? "transparent" : dark ? "#0f0f10" : "#faf9f9",
+          fontFamily: font?.family,
+        }}
+      >
       {biosite.cover_url && (
         <div className="-mx-4 -mt-6 mb-2 h-40 w-[calc(100%+2rem)] overflow-hidden bg-neutral-200">
           {biosite.cover_type === "video" ? (
@@ -120,7 +158,7 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
         <img
           src={biosite.logo_url}
           alt={biosite.business_name}
-          className={`h-28 w-28 object-cover ${
+          className={`${logoSizeClass} object-cover ${
             biosite.logo_transparent ? "" : "border-4 border-white shadow-lg"
           } ${biosite.logo_shape === "round" ? "rounded-full" : "rounded-2xl"} ${
             biosite.cover_url ? "-mt-16" : ""
@@ -179,6 +217,7 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
           desenvolvido por {profile.agency_name}
         </a>
       )}
-    </main>
+      </main>
+    </>
   );
 }

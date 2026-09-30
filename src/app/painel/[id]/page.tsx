@@ -74,7 +74,8 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
   const publicUrl = `${protocol}://${host}/${biosite.slug}`;
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-6xl px-4 pb-16 pt-6">
+    <main className="min-h-screen w-full bg-[#faf9f5] px-4 pb-16 pt-6">
+      <div className="mx-auto w-full max-w-6xl">
       <div className="mb-4 flex items-center justify-between">
         <Link href="/painel" className="text-sm text-neutral-500 hover:text-neutral-800">
           ← Voltar
@@ -96,10 +97,10 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
       </div>
 
       <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
-        <div className="mb-6 flex flex-col gap-2 rounded-xl border border-neutral-200 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-6 flex flex-col gap-2 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-wider text-[#191970]">Bio Insta editor</p>
-            <h1 className="text-2xl font-extrabold text-neutral-900 sm:text-3xl">Editar biosite</h1>
+            <h1 className="text-3xl font-extrabold text-neutral-900 sm:text-4xl">Editar biosite</h1>
             <p className="mt-1 text-sm text-neutral-500">
               Tudo editável com preview ao vivo. Depois é só compartilhar o link ou o QR Code.
             </p>
@@ -238,6 +239,7 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
 
       <div className="lg:hidden">
         <PreviewPhone url={publicUrl} />
+      </div>
       </div>
     </main>
   );
