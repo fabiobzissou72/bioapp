@@ -167,7 +167,7 @@ export function ButtonsEditor({
       {!adding ? (
         <button
           onClick={() => setAdding(true)}
-          className="mt-1 rounded-xl border-2 border-dashed border-neutral-200 py-3 text-sm font-medium text-neutral-500 hover:border-pink-300 hover:text-pink-600"
+          className="mt-1 rounded-xl border-2 border-dashed border-neutral-200 py-3 text-sm font-medium text-neutral-500 hover:border-[#191970]/40 hover:text-[#191970]"
         >
           + Adicionar botão
         </button>
@@ -369,7 +369,7 @@ export function ButtonsEditor({
             <button
               onClick={saveButton}
               disabled={saving}
-              className="rounded-full bg-pink-600 px-5 py-2 text-sm font-medium text-white disabled:opacity-40"
+              className="rounded-full bg-[#191970] px-5 py-2 text-sm font-medium text-white disabled:opacity-40"
             >
               {saving ? "Salvando..." : editingId ? "Salvar" : "Adicionar"}
             </button>

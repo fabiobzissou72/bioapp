@@ -83,7 +83,7 @@ export function ClientAccessEditor({
         <button
           onClick={grantAccess}
           disabled={saving || !email || !password}
-          className="rounded-full bg-pink-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
+          className="rounded-full bg-[#191970] px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
         >
           {saving ? "Criando..." : "Criar acesso"}
         </button>

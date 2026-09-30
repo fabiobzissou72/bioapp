@@ -53,7 +53,7 @@ export function CatalogEditor({
       {!adding ? (
         <button
           onClick={() => setAdding(true)}
-          className="rounded-xl border-2 border-dashed border-neutral-200 py-3 text-sm font-medium text-neutral-500 hover:border-pink-300 hover:text-pink-600"
+          className="rounded-xl border-2 border-dashed border-neutral-200 py-3 text-sm font-medium text-neutral-500 hover:border-[#191970]/40 hover:text-[#191970]"
         >
           + Novo catálogo
         </button>
@@ -73,7 +73,7 @@ export function CatalogEditor({
             <button
               onClick={createGroup}
               disabled={saving || !newName}
-              className="rounded-full bg-pink-600 px-5 py-2 text-sm font-medium text-white disabled:opacity-40"
+              className="rounded-full bg-[#191970] px-5 py-2 text-sm font-medium text-white disabled:opacity-40"
             >
               Criar
             </button>

@@ -43,7 +43,7 @@ export function QrCodeButton({ url }: { url: string }) {
               <a
                 href={dataUrl}
                 download="qrcode.png"
-                className="w-full rounded-full bg-pink-600 py-2 text-center text-sm font-medium text-white"
+                className="w-full rounded-full bg-[#191970] py-2 text-center text-sm font-medium text-white"
               >
                 Baixar
               </a>

@@ -116,7 +116,7 @@ export function CatalogItemRow({
           <button
             type="button"
             onClick={() => posterInput.current?.click()}
-            className="text-[10px] font-medium text-pink-600"
+            className="text-[10px] font-medium text-[#191970]"
           >
             {uploadingPoster ? "..." : "trocar miniatura"}
           </button>

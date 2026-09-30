@@ -176,14 +176,14 @@ export function CatalogGroupCard({
             <button
               onClick={() => imageInput.current?.click()}
               disabled={uploading}
-              className="flex-1 rounded-full border border-neutral-200 py-2 text-sm font-medium text-neutral-600 hover:border-pink-300 hover:text-pink-600"
+              className="flex-1 rounded-full border border-neutral-200 py-2 text-sm font-medium text-neutral-600 hover:border-[#191970]/40 hover:text-[#191970]"
             >
               {uploading ? "Enviando..." : "🖼 Imagem"}
             </button>
             <button
               onClick={() => videoInput.current?.click()}
               disabled={uploading}
-              className="flex-1 rounded-full border border-neutral-200 py-2 text-sm font-medium text-neutral-600 hover:border-pink-300 hover:text-pink-600"
+              className="flex-1 rounded-full border border-neutral-200 py-2 text-sm font-medium text-neutral-600 hover:border-[#191970]/40 hover:text-[#191970]"
             >
               {uploading ? "Enviando..." : "🎥 Vídeo"}
             </button>

@@ -250,7 +250,7 @@ export function StaffEditor({
         <button
           onClick={addStaff}
           disabled={saving || !name}
-          className="rounded-full bg-pink-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
+          className="rounded-full bg-[#191970] px-4 py-2 text-sm font-medium text-white disabled:opacity-40"
         >
           Adicionar
         </button>

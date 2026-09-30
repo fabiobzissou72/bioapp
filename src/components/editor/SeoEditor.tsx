@@ -67,7 +67,7 @@ export function SeoEditor({ biosite }: { biosite: Biosite }) {
       <button
         onClick={handleSave}
         disabled={saving}
-        className="self-start rounded-full bg-pink-600 px-5 py-2 text-sm font-medium text-white disabled:opacity-40"
+        className="self-start rounded-full bg-[#191970] px-5 py-2 text-sm font-medium text-white disabled:opacity-40"
       >
         {saving ? "Salvando..." : "Salvar"}
       </button>
