@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { BiositeInfoForm } from "@/components/editor/BiositeInfoForm";
 import { ProgressChecklist } from "@/components/editor/ProgressChecklist";
 import { EditorTabs } from "@/components/editor/EditorTabs";
+import { PreviewPhone } from "@/components/editor/PreviewPhone";
 import { ButtonsEditor } from "@/components/editor/ButtonsEditor";
 import { ServicesEditor } from "@/components/editor/ServicesEditor";
 import { StaffEditor } from "@/components/editor/StaffEditor";
@@ -179,6 +180,8 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
           },
         ]}
       />
+
+      <PreviewPhone url={publicUrl} />
     </main>
   );
 }

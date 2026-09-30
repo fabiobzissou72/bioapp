@@ -21,7 +21,7 @@ export function EditorTabs({ tabs }: { tabs: EditorTab[] }) {
               onClick={() => setActive(tab.id)}
               className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition ${
                 active === tab.id
-                  ? "bg-pink-600 text-white"
+                  ? "bg-teal-600 text-white shadow-sm"
                   : "text-neutral-600 hover:bg-neutral-100"
               }`}
             >
