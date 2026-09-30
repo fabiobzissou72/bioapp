@@ -75,7 +75,7 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
 
   return (
     <main className="min-h-screen w-full bg-[#faf9f5] px-4 pb-16 pt-6">
-      <div className="mx-auto w-full max-w-6xl">
+      <div className="mx-auto w-full max-w-[1800px]">
       <div className="mb-4 flex items-center justify-between">
         <Link href="/painel" className="text-sm text-neutral-500 hover:text-neutral-800">
           ← Voltar

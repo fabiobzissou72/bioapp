@@ -28,7 +28,7 @@ export default async function PainelPage() {
   const limit = profile?.plan_limit ?? 30;
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-3xl px-4 pb-10 pt-6">
+    <main className="mx-auto min-h-screen w-full max-w-5xl px-4 pb-10 pt-6">
       <div className="mb-6 rounded-xl border border-neutral-200 bg-white p-6 shadow-sm">
         <p className="text-xs font-bold uppercase tracking-wider text-[#191970]">Bio Insta</p>
         <h1 className="text-2xl font-extrabold text-neutral-900 sm:text-3xl">Meu painel</h1>
@@ -42,7 +42,7 @@ export default async function PainelPage() {
         cloneOptions={(biosites || []).map((b) => ({ id: b.id, business_name: b.business_name }))}
       />
 
-      <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {(biosites || []).map((b) => (
           <BiositeCard key={b.id} biosite={b} />
         ))}
