@@ -34,7 +34,10 @@ export default async function PainelPage() {
       </h2>
 
       <div className="mt-4">
-        <CreateBiositeForm disabled={count >= limit} />
+        <CreateBiositeForm
+          disabled={count >= limit}
+          cloneOptions={(biosites || []).map((b) => ({ id: b.id, business_name: b.business_name }))}
+        />
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
