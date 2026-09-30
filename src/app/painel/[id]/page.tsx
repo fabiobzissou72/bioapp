@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { BiositeInfoForm } from "@/components/editor/BiositeInfoForm";
+import { AparenciaEditor } from "@/components/editor/AparenciaEditor";
 import { ProgressChecklist } from "@/components/editor/ProgressChecklist";
 import { EditorTabs } from "@/components/editor/EditorTabs";
 import { PreviewPhone } from "@/components/editor/PreviewPhone";
@@ -194,24 +195,37 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
                   ),
                 },
                 {
+                  id: "aparencia",
+                  label: "Aparência",
+                  icon: "🎨",
+                  group: "Aparência",
+                  content: <AparenciaEditor biosite={biosite} />,
+                },
+                {
+                  id: "integracoes",
+                  label: "Integrações",
+                  icon: "🔌",
+                  group: "Integrações",
+                  content: (
+                    <section>
+                      <h2 className="mb-3 text-lg font-semibold text-neutral-900">Notificações (webhook)</h2>
+                      <NotificationWebhookEditor
+                        biositeId={id}
+                        webhookUrl={biosite.notification_webhook_url}
+                      />
+                    </section>
+                  ),
+                },
+                {
                   id: "configuracoes",
                   label: "Configurações",
                   icon: "🔒",
                   group: "Configurações",
                   content: (
-                    <div className="flex flex-col gap-8">
-                      <section>
-                        <h2 className="mb-3 text-lg font-semibold text-neutral-900">Acesso do cliente</h2>
-                        <ClientAccessEditor biositeId={id} accesses={clientAccesses || []} />
-                      </section>
-                      <section>
-                        <h2 className="mb-3 text-lg font-semibold text-neutral-900">Notificações (webhook)</h2>
-                        <NotificationWebhookEditor
-                          biositeId={id}
-                          webhookUrl={biosite.notification_webhook_url}
-                        />
-                      </section>
-                    </div>
+                    <section>
+                      <h2 className="mb-3 text-lg font-semibold text-neutral-900">Acesso do cliente</h2>
+                      <ClientAccessEditor biositeId={id} accesses={clientAccesses || []} />
+                    </section>
                   ),
                 },
               ]}
