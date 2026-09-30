@@ -11,7 +11,7 @@ export function PreviewPhone({ url }: { url: string }) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-teal-600 text-xl text-white shadow-lg transition hover:bg-teal-700"
+        className="fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-blue-900 text-xl text-white shadow-lg transition hover:bg-blue-950"
         aria-label="Ver preview do biosite"
       >
         👁️

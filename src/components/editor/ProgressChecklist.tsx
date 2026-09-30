@@ -16,7 +16,7 @@ export function ProgressChecklist({ items }: { items: ChecklistItem[] }) {
         <div
           className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-neutral-900"
           style={{
-            background: `conic-gradient(#0d9488 ${percent}%, #e5e5e5 0)`,
+            background: `conic-gradient(#1e3a8a ${percent}%, #e5e5e5 0)`,
           }}
         >
           <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white">{percent}%</div>
@@ -46,7 +46,7 @@ export function ProgressChecklist({ items }: { items: ChecklistItem[] }) {
           >
             <span
               className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border text-[10px] ${
-                item.done ? "border-teal-600 bg-teal-600 text-white" : "border-neutral-300"
+                item.done ? "border-blue-900 bg-blue-900 text-white" : "border-neutral-300"
               }`}
             >
               {item.done ? "✓" : ""}

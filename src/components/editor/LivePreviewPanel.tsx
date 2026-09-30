@@ -23,7 +23,7 @@ export function LivePreviewPanel({ url }: { url: string }) {
               <button
                 onClick={() => setMode("mobile")}
                 className={`px-2.5 py-1 transition ${
-                  mode === "mobile" ? "bg-teal-600 text-white" : "text-neutral-600 hover:bg-neutral-100"
+                  mode === "mobile" ? "bg-blue-900 text-white" : "text-neutral-600 hover:bg-neutral-100"
                 }`}
               >
                 Mobile
@@ -31,7 +31,7 @@ export function LivePreviewPanel({ url }: { url: string }) {
               <button
                 onClick={() => setMode("desktop")}
                 className={`px-2.5 py-1 transition ${
-                  mode === "desktop" ? "bg-teal-600 text-white" : "text-neutral-600 hover:bg-neutral-100"
+                  mode === "desktop" ? "bg-blue-900 text-white" : "text-neutral-600 hover:bg-neutral-100"
                 }`}
               >
                 Desktop
