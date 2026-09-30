@@ -4,6 +4,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { BiositeInfoForm } from "@/components/editor/BiositeInfoForm";
 import { ProgressChecklist } from "@/components/editor/ProgressChecklist";
+import { EditorTabs } from "@/components/editor/EditorTabs";
 import { ButtonsEditor } from "@/components/editor/ButtonsEditor";
 import { ServicesEditor } from "@/components/editor/ServicesEditor";
 import { StaffEditor } from "@/components/editor/StaffEditor";
@@ -101,54 +102,83 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
         ]}
       />
 
-      <BiositeInfoForm biosite={biosite} />
-
-      <section className="mt-8">
-        <h2 className="mb-3 text-lg font-semibold text-neutral-900">SEO (Google)</h2>
-        <SeoEditor biosite={biosite} />
-      </section>
-
-      <section className="mt-8">
-        <h2 className="mb-3 text-lg font-semibold text-neutral-900">Botões</h2>
-        <ButtonsEditor biositeId={id} buttons={(buttons || []) as BiositeButton[]} slug={biosite.slug} />
-      </section>
-
-      <section className="mt-8">
-        <h2 className="mb-3 text-lg font-semibold text-neutral-900">Catálogo (Nossos serviços)</h2>
-        <CatalogEditor
-          biositeId={id}
-          ownerId={biosite.owner_id}
-          groups={(catalogGroups || []) as CatalogGroup[]}
-          itemsByGroup={itemsByGroup}
-        />
-      </section>
-
-      <section className="mt-8">
-        <h2 className="mb-3 text-lg font-semibold text-neutral-900">Serviços (agendamento)</h2>
-        <ServicesEditor biositeId={id} services={(services || []) as Service[]} />
-      </section>
-
-      <section className="mt-8">
-        <h2 className="mb-3 text-lg font-semibold text-neutral-900">Profissionais e disponibilidade</h2>
-        <StaffEditor
-          biositeId={id}
-          staff={(staff || []) as Staff[]}
-          services={(services || []) as Service[]}
-          staffServices={staffServices || []}
-          availability={availability || []}
-          overrides={overrides || []}
-        />
-      </section>
-
-      <section className="mt-8">
-        <h2 className="mb-3 text-lg font-semibold text-neutral-900">Acesso do cliente</h2>
-        <ClientAccessEditor biositeId={id} accesses={clientAccesses || []} />
-      </section>
-
-      <section className="mt-8">
-        <h2 className="mb-3 text-lg font-semibold text-neutral-900">Notificações (webhook)</h2>
-        <NotificationWebhookEditor biositeId={id} webhookUrl={biosite.notification_webhook_url} />
-      </section>
+      <EditorTabs
+        tabs={[
+          {
+            id: "perfil",
+            label: "1. Perfil",
+            content: (
+              <div className="flex flex-col gap-8">
+                <BiositeInfoForm biosite={biosite} />
+                <section>
+                  <h2 className="mb-3 text-lg font-semibold text-neutral-900">SEO (Google)</h2>
+                  <SeoEditor biosite={biosite} />
+                </section>
+              </div>
+            ),
+          },
+          {
+            id: "botoes",
+            label: "2. Botões",
+            content: (
+              <ButtonsEditor biositeId={id} buttons={(buttons || []) as BiositeButton[]} slug={biosite.slug} />
+            ),
+          },
+          {
+            id: "catalogo",
+            label: "3. Catálogo",
+            content: (
+              <CatalogEditor
+                biositeId={id}
+                ownerId={biosite.owner_id}
+                groups={(catalogGroups || []) as CatalogGroup[]}
+                itemsByGroup={itemsByGroup}
+              />
+            ),
+          },
+          {
+            id: "servicos",
+            label: "4. Serviços",
+            content: (
+              <div className="flex flex-col gap-8">
+                <section>
+                  <h2 className="mb-3 text-lg font-semibold text-neutral-900">Serviços (agendamento)</h2>
+                  <ServicesEditor biositeId={id} services={(services || []) as Service[]} />
+                </section>
+                <section>
+                  <h2 className="mb-3 text-lg font-semibold text-neutral-900">
+                    Profissionais e disponibilidade
+                  </h2>
+                  <StaffEditor
+                    biositeId={id}
+                    staff={(staff || []) as Staff[]}
+                    services={(services || []) as Service[]}
+                    staffServices={staffServices || []}
+                    availability={availability || []}
+                    overrides={overrides || []}
+                  />
+                </section>
+              </div>
+            ),
+          },
+          {
+            id: "configuracoes",
+            label: "5. Configurações",
+            content: (
+              <div className="flex flex-col gap-8">
+                <section>
+                  <h2 className="mb-3 text-lg font-semibold text-neutral-900">Acesso do cliente</h2>
+                  <ClientAccessEditor biositeId={id} accesses={clientAccesses || []} />
+                </section>
+                <section>
+                  <h2 className="mb-3 text-lg font-semibold text-neutral-900">Notificações (webhook)</h2>
+                  <NotificationWebhookEditor biositeId={id} webhookUrl={biosite.notification_webhook_url} />
+                </section>
+              </div>
+            ),
+          },
+        ]}
+      />
     </main>
   );
 }
