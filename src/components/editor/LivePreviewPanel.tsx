@@ -10,7 +10,7 @@ export function LivePreviewPanel({ url }: { url: string }) {
     <aside className="sticky top-6 hidden w-[380px] shrink-0 lg:block">
       <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-4">
         <div className="mb-3 flex items-center justify-between">
-          <span className="text-sm font-semibold text-neutral-900">Preview</span>
+          <span className="text-sm font-semibold text-neutral-900">Preview ao vivo</span>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setReloadKey((k) => k + 1)}
@@ -46,6 +46,7 @@ export function LivePreviewPanel({ url }: { url: string }) {
               mode === "mobile" ? "w-[240px]" : "w-full"
             }`}
           >
+            {mode === "mobile" && <div className="mx-auto mb-1 h-4 w-20 rounded-b-lg bg-neutral-900" />}
             <iframe
               key={reloadKey}
               src={url}

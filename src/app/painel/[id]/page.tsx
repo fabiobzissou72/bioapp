@@ -87,105 +87,139 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
             href={`/${biosite.slug}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-medium text-pink-600 lg:hidden"
+            className="text-sm font-medium text-[#191970] lg:hidden"
           >
             Ver biosite →
           </a>
         </div>
       </div>
 
-      <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none lg:flex lg:items-start lg:gap-6">
-      <div className="min-w-0 flex-1">
-      <ProgressChecklist
-        items={[
-          { label: "Nome do negócio", done: Boolean(biosite.business_name?.trim()) },
-          { label: "Descrição", done: Boolean(biosite.description?.trim()) },
-          { label: "Foto de perfil ou logo", done: Boolean(biosite.logo_url) },
-          { label: "Pelo menos 1 botão ativo", done: (buttons || []).length > 0 },
-          { label: "Biosite publicado", done: biosite.published },
-        ]}
-      />
+      <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
+        <div className="mb-6 flex flex-col gap-2 rounded-xl border border-neutral-200 p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-wider text-[#191970]">Bio Insta editor</p>
+            <h1 className="text-2xl font-extrabold text-neutral-900 sm:text-3xl">Editar biosite</h1>
+            <p className="mt-1 text-sm text-neutral-500">
+              Tudo editável com preview ao vivo. Depois é só compartilhar o link ou o QR Code.
+            </p>
+          </div>
+          <a
+            href={`/${biosite.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden shrink-0 rounded-full bg-[#191970] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#12124f] lg:inline-block"
+          >
+            Ver biosite →
+          </a>
+        </div>
 
-      <EditorTabs
-        tabs={[
-          {
-            id: "perfil",
-            label: "1. Perfil",
-            content: (
-              <div className="flex flex-col gap-8">
-                <BiositeInfoForm biosite={biosite} />
-                <section>
-                  <h2 className="mb-3 text-lg font-semibold text-neutral-900">SEO (Google)</h2>
-                  <SeoEditor biosite={biosite} />
-                </section>
-              </div>
-            ),
-          },
-          {
-            id: "botoes",
-            label: "2. Botões",
-            content: (
-              <ButtonsEditor biositeId={id} buttons={(buttons || []) as BiositeButton[]} slug={biosite.slug} />
-            ),
-          },
-          {
-            id: "catalogo",
-            label: "3. Catálogo",
-            content: (
-              <CatalogEditor
-                biositeId={id}
-                ownerId={biosite.owner_id}
-                groups={(catalogGroups || []) as CatalogGroup[]}
-                itemsByGroup={itemsByGroup}
-              />
-            ),
-          },
-          {
-            id: "servicos",
-            label: "4. Serviços",
-            content: (
-              <div className="flex flex-col gap-8">
-                <section>
-                  <h2 className="mb-3 text-lg font-semibold text-neutral-900">Serviços (agendamento)</h2>
-                  <ServicesEditor biositeId={id} services={(services || []) as Service[]} />
-                </section>
-                <section>
-                  <h2 className="mb-3 text-lg font-semibold text-neutral-900">
-                    Profissionais e disponibilidade
-                  </h2>
-                  <StaffEditor
-                    biositeId={id}
-                    staff={(staff || []) as Staff[]}
-                    services={(services || []) as Service[]}
-                    staffServices={staffServices || []}
-                    availability={availability || []}
-                    overrides={overrides || []}
-                  />
-                </section>
-              </div>
-            ),
-          },
-          {
-            id: "configuracoes",
-            label: "5. Configurações",
-            content: (
-              <div className="flex flex-col gap-8">
-                <section>
-                  <h2 className="mb-3 text-lg font-semibold text-neutral-900">Acesso do cliente</h2>
-                  <ClientAccessEditor biositeId={id} accesses={clientAccesses || []} />
-                </section>
-                <section>
-                  <h2 className="mb-3 text-lg font-semibold text-neutral-900">Notificações (webhook)</h2>
-                  <NotificationWebhookEditor biositeId={id} webhookUrl={biosite.notification_webhook_url} />
-                </section>
-              </div>
-            ),
-          },
-        ]}
-      />
-      </div>
+        <div className="lg:flex lg:items-start lg:gap-6">
+          <div className="min-w-0 flex-1">
+            <ProgressChecklist
+              items={[
+                { label: "Nome do negócio", done: Boolean(biosite.business_name?.trim()) },
+                { label: "Descrição", done: Boolean(biosite.description?.trim()) },
+                { label: "Foto de perfil ou logo", done: Boolean(biosite.logo_url) },
+                { label: "Pelo menos 1 botão ativo", done: (buttons || []).length > 0 },
+                { label: "Biosite publicado", done: biosite.published },
+              ]}
+            />
 
-      <LivePreviewPanel url={publicUrl} />
+            <EditorTabs
+              tabs={[
+                {
+                  id: "perfil",
+                  label: "Perfil e Contato",
+                  icon: "👤",
+                  content: (
+                    <div className="flex flex-col gap-8">
+                      <BiositeInfoForm biosite={biosite} />
+                      <section>
+                        <h2 className="mb-3 text-lg font-semibold text-neutral-900">SEO (Google)</h2>
+                        <SeoEditor biosite={biosite} />
+                      </section>
+                    </div>
+                  ),
+                },
+                {
+                  id: "botoes",
+                  label: "Links e Botões",
+                  icon: "🔗",
+                  content: (
+                    <ButtonsEditor
+                      biositeId={id}
+                      buttons={(buttons || []) as BiositeButton[]}
+                      slug={biosite.slug}
+                    />
+                  ),
+                },
+                {
+                  id: "catalogo",
+                  label: "Catálogo",
+                  icon: "🛍️",
+                  content: (
+                    <CatalogEditor
+                      biositeId={id}
+                      ownerId={biosite.owner_id}
+                      groups={(catalogGroups || []) as CatalogGroup[]}
+                      itemsByGroup={itemsByGroup}
+                    />
+                  ),
+                },
+                {
+                  id: "servicos",
+                  label: "Serviços",
+                  icon: "📅",
+                  group: "Agenda",
+                  content: (
+                    <div className="flex flex-col gap-8">
+                      <section>
+                        <h2 className="mb-3 text-lg font-semibold text-neutral-900">Serviços (agendamento)</h2>
+                        <ServicesEditor biositeId={id} services={(services || []) as Service[]} />
+                      </section>
+                      <section>
+                        <h2 className="mb-3 text-lg font-semibold text-neutral-900">
+                          Profissionais e disponibilidade
+                        </h2>
+                        <StaffEditor
+                          biositeId={id}
+                          staff={(staff || []) as Staff[]}
+                          services={(services || []) as Service[]}
+                          staffServices={staffServices || []}
+                          availability={availability || []}
+                          overrides={overrides || []}
+                        />
+                      </section>
+                    </div>
+                  ),
+                },
+                {
+                  id: "configuracoes",
+                  label: "Configurações",
+                  icon: "🔒",
+                  group: "Configurações",
+                  content: (
+                    <div className="flex flex-col gap-8">
+                      <section>
+                        <h2 className="mb-3 text-lg font-semibold text-neutral-900">Acesso do cliente</h2>
+                        <ClientAccessEditor biositeId={id} accesses={clientAccesses || []} />
+                      </section>
+                      <section>
+                        <h2 className="mb-3 text-lg font-semibold text-neutral-900">Notificações (webhook)</h2>
+                        <NotificationWebhookEditor
+                          biositeId={id}
+                          webhookUrl={biosite.notification_webhook_url}
+                        />
+                      </section>
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </div>
+
+          <LivePreviewPanel url={publicUrl} />
+        </div>
       </div>
 
       <div className="lg:hidden">
