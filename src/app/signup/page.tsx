@@ -46,65 +46,68 @@ export default function SignupPage() {
 
   if (awaitingConfirmation) {
     return (
-      <main className="mx-auto flex min-h-screen w-full max-w-sm flex-col justify-center gap-3 px-4 text-center">
-        <div className="text-3xl">📩</div>
-        <h1 className="text-xl font-bold text-neutral-900">Confirme seu e-mail</h1>
-        <p className="text-sm text-neutral-500">
-          Enviamos um link de confirmação para {email}. Depois de confirmar, faça login normalmente.
-        </p>
-        <Link href="/login" className="mt-2 font-medium text-pink-600">
-          Ir para login
-        </Link>
+      <main className="flex min-h-screen w-full items-center justify-center bg-[#faf9f5] px-4">
+        <div className="w-full max-w-sm rounded-2xl border border-neutral-200 bg-white p-8 text-center shadow-sm">
+          <div className="text-3xl">📩</div>
+          <h1 className="mt-2 text-xl font-bold text-neutral-900">Confirme seu e-mail</h1>
+          <p className="mt-1 text-sm text-neutral-500">
+            Enviamos um link de confirmação para {email}. Depois de confirmar, faça login normalmente.
+          </p>
+          <Link href="/login" className="mt-3 inline-block font-medium text-[#191970]">
+            Ir para login
+          </Link>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-sm flex-col justify-center gap-5 px-4">
-      <div>
-        <h1 className="text-2xl font-bold text-neutral-900">Criar conta</h1>
+    <main className="flex min-h-screen w-full items-center justify-center bg-[#faf9f5] px-4">
+      <div className="w-full max-w-sm rounded-2xl border border-neutral-200 bg-white p-8 shadow-sm">
+        <p className="text-xs font-bold uppercase tracking-wider text-[#191970]">Bio Insta</p>
+        <h1 className="mt-1 text-2xl font-extrabold text-neutral-900">Criar conta</h1>
         <p className="mt-1 text-sm text-neutral-500">Crie sua agência e comece a montar biosites.</p>
+        <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-3">
+          <input
+            required
+            value={agencyName}
+            onChange={(e) => setAgencyName(e.target.value)}
+            placeholder="Nome da sua agência"
+            className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none focus:border-[#191970]"
+          />
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="E-mail"
+            className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none focus:border-[#191970]"
+          />
+          <input
+            type="password"
+            required
+            minLength={6}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Senha"
+            className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none focus:border-[#191970]"
+          />
+          {error && <p className="text-sm text-red-500">{error}</p>}
+          <button
+            type="submit"
+            disabled={loading}
+            className="rounded-full bg-[#191970] px-5 py-3 font-medium text-white shadow transition hover:bg-[#12124f] disabled:opacity-40"
+          >
+            {loading ? "Criando..." : "Criar conta"}
+          </button>
+        </form>
+        <p className="mt-4 text-center text-sm text-neutral-500">
+          Já tem conta?{" "}
+          <Link href="/login" className="font-medium text-[#191970]">
+            Entrar
+          </Link>
+        </p>
       </div>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-        <input
-          required
-          value={agencyName}
-          onChange={(e) => setAgencyName(e.target.value)}
-          placeholder="Nome da sua agência"
-          className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none focus:border-neutral-400"
-        />
-        <input
-          type="email"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="E-mail"
-          className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none focus:border-neutral-400"
-        />
-        <input
-          type="password"
-          required
-          minLength={6}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Senha"
-          className="rounded-lg border border-neutral-200 bg-white text-neutral-900 px-3 py-2 text-sm outline-none focus:border-neutral-400"
-        />
-        {error && <p className="text-sm text-red-500">{error}</p>}
-        <button
-          type="submit"
-          disabled={loading}
-          className="rounded-full bg-pink-600 px-5 py-3 font-medium text-white shadow disabled:opacity-40"
-        >
-          {loading ? "Criando..." : "Criar conta"}
-        </button>
-      </form>
-      <p className="text-center text-sm text-neutral-500">
-        Já tem conta?{" "}
-        <Link href="/login" className="font-medium text-pink-600">
-          Entrar
-        </Link>
-      </p>
     </main>
   );
 }
