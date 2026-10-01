@@ -7,7 +7,7 @@ import { MyBookings } from "@/components/biosite/MyBookings";
 import { AddressBlock } from "@/components/biosite/AddressBlock";
 import { SocialIconRow } from "@/components/biosite/SocialIconRow";
 import { SOCIAL_BUTTON_TYPES } from "@/lib/socialTypes";
-import type { Biosite, BiositeButton, CatalogGroup, CatalogItem } from "@/lib/types";
+import type { Biosite, BiositeButton, CatalogGroup, CatalogItem, HighlightCard } from "@/lib/types";
 
 const FONT_CONFIG: Record<Biosite["font_family"], { family: string; googleFont: string } | null> = {
   default: null,
@@ -24,6 +24,32 @@ const LOGO_SIZE_CLASSES: Record<Biosite["logo_size"], string> = {
   medium: "h-28 w-28",
   large: "h-36 w-36",
 };
+
+function getOpenStatus(businessHours: Biosite["business_hours"]) {
+  const now = new Date();
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Sao_Paulo",
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(now);
+
+  const weekdayShort = parts.find((p) => p.type === "weekday")?.value ?? "";
+  const hour = parts.find((p) => p.type === "hour")?.value ?? "00";
+  const minute = parts.find((p) => p.type === "minute")?.value ?? "00";
+  const dayIndex = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(weekdayShort);
+  const nowMinutes = parseInt(hour, 10) * 60 + parseInt(minute, 10);
+
+  const today = businessHours.find((h) => h.day === dayIndex);
+  if (!today || today.closed) return false;
+
+  const [openH, openM] = today.open.split(":").map(Number);
+  const [closeH, closeM] = today.close.split(":").map(Number);
+  const openMinutes = openH * 60 + openM;
+  const closeMinutes = closeH * 60 + closeM;
+  return nowMinutes >= openMinutes && nowMinutes < closeMinutes;
+}
 
 export const revalidate = 0;
 
@@ -109,6 +135,7 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
   const otherButtons = allButtons.filter((b) => b.type !== "address" && !SOCIAL_BUTTON_TYPES.has(b.type));
   const font = FONT_CONFIG[biosite.font_family as Biosite["font_family"]] ?? null;
   const logoSizeClass = LOGO_SIZE_CLASSES[biosite.logo_size as Biosite["logo_size"]] ?? LOGO_SIZE_CLASSES.medium;
+  const isOpen = biosite.show_business_hours ? getOpenStatus(biosite.business_hours) : null;
 
   return (
     <>
@@ -175,7 +202,32 @@ export default async function BiositePage({ params }: { params: Promise<{ slug: 
             {biosite.description}
           </p>
         )}
+        {isOpen !== null && (
+          <span
+            className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-medium ${
+              isOpen ? "bg-green-100 text-green-700" : "bg-neutral-200 text-neutral-600"
+            }`}
+          >
+            {isOpen ? "Aberto agora" : "Fechado"}
+          </span>
+        )}
       </div>
+
+      {biosite.highlight_cards.length > 0 && (
+        <div className="flex w-full gap-2 overflow-x-auto">
+          {biosite.highlight_cards.map((card: HighlightCard, i: number) => (
+            <div
+              key={i}
+              className={`shrink-0 rounded-xl px-4 py-3 text-center ${
+                dark ? "bg-white/10 text-neutral-100" : "bg-white text-neutral-900 shadow-sm"
+              }`}
+            >
+              <p className="text-sm font-semibold">{card.title}</p>
+              {card.subtitle && <p className="text-xs opacity-70">{card.subtitle}</p>}
+            </div>
+          ))}
+        </div>
+      )}
 
       <MyBookings biositeId={biosite.id} dark={dark} />
 

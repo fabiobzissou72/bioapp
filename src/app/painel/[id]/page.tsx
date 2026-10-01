@@ -4,6 +4,8 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { BiositeInfoForm } from "@/components/editor/BiositeInfoForm";
 import { AparenciaEditor } from "@/components/editor/AparenciaEditor";
+import { BusinessHoursEditor } from "@/components/editor/BusinessHoursEditor";
+import { HighlightCardsEditor } from "@/components/editor/HighlightCardsEditor";
 import { ProgressChecklist } from "@/components/editor/ProgressChecklist";
 import { EditorTabs } from "@/components/editor/EditorTabs";
 import { PreviewPhone } from "@/components/editor/PreviewPhone";
@@ -136,6 +138,8 @@ export default async function EditorPage({ params }: { params: Promise<{ id: str
                   content: (
                     <div className="flex flex-col gap-8">
                       <BiositeInfoForm biosite={biosite} />
+                      <BusinessHoursEditor biosite={biosite} />
+                      <HighlightCardsEditor biosite={biosite} />
                       <section>
                         <h2 className="mb-3 text-lg font-semibold text-neutral-900">SEO (Google)</h2>
                         <SeoEditor biosite={biosite} />

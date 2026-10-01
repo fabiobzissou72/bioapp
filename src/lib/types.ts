@@ -42,6 +42,9 @@ export type Biosite = {
   font_family: "default" | "poppins" | "playfair" | "bebas" | "caveat" | "oswald" | "merriweather";
   background_image_url: string | null;
   background_darken: boolean;
+  show_business_hours: boolean;
+  business_hours: BusinessHourEntry[];
+  highlight_cards: HighlightCard[];
   seo_title: string | null;
   seo_description: string | null;
   seo_keywords: string | null;
@@ -49,6 +52,18 @@ export type Biosite = {
   published: boolean;
   created_at: string;
   updated_at: string;
+};
+
+export type BusinessHourEntry = {
+  day: number; // 0 = domingo ... 6 = sábado
+  closed: boolean;
+  open: string; // "HH:MM"
+  close: string; // "HH:MM"
+};
+
+export type HighlightCard = {
+  title: string;
+  subtitle: string;
 };
 
 export type ButtonConfig = {
